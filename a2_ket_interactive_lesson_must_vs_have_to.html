@@ -1,0 +1,2132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#234d3f">
+  <title>Summit Quest — A2 KET Grammar Adventure (Must vs Have to)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #244a3c;
+      --muted: #78857b;
+      --paper: #f6f5ee;
+      --line: #e1e5d9;
+      --orange: #ed9e56;
+      --yellow: #f7cc76;
+      --green: #2f6650;
+      --font: 'Plus Jakarta Sans', Inter, "Segoe UI", Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+    }
+    button { font: inherit; cursor: pointer; }
+    button:disabled { cursor: default; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    svg { display: block; }
+    .icon {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      padding: 10px 28px;
+      background: #faf9f3;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      flex-wrap: wrap;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    .brand-mark {
+      width: 43px; height: 43px; border-radius: 14px;
+      background: var(--ink); display: grid; place-items: center;
+      color: #f7d38a; box-shadow: inset 0 -3px 0 #0002;
+    }
+    .brand-mark .icon { width: 28px; height: 28px; }
+    .brand-name { font-size: 21px; font-weight: 800; letter-spacing: -.8px; }
+    .brand-caption { display: block; font-size: 10px; letter-spacing: 2px; margin-top: 2px; font-weight: 700; color: #879186; }
+
+    /* MAP & SUMMIT QUEST STYLES */
+    .shell { max-width: 1720px; margin: 0 auto; padding: 22px 28px 24px; }
+    .page-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; gap: 20px; flex-wrap: wrap; }
+    .eyebrow { font-size: 10px; line-height: 1.5; font-weight: 800; letter-spacing: 2px; color: #aa784c; text-transform: uppercase; }
+    .page-heading h1 { font-size: clamp(24px, 2.2vw, 34px); font-weight: 800; letter-spacing: -1px; margin: 4px 0 6px; line-height: 1.15; }
+    .page-heading p { font-size: 13px; margin: 0; color: var(--muted); }
+    .heading-tag { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: #eeefe5; border: 1px solid #e0e5d5; border-radius: 12px; font-size: 12px; }
+    .game-layout { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 22px; align-items: stretch; }
+    .map-panel {
+      position: relative; isolation: isolate;
+      border: 1px solid #dce3d4; border-radius: 22px;
+      overflow: hidden; background: #eaf1e4;
+      min-height: 540px; height: calc(100dvh - 230px); max-height: 800px;
+      box-shadow: 0 5px 20px #304d3010;
+    }
+    .map-art { width: 100%; height: 100%; background: linear-gradient(#eef3e6, #e7eeda); }
+    .map-header { position: absolute; z-index: 2; left: 24px; top: 22px; pointer-events: none; }
+    .map-header strong { font-size: 13px; display: block; }
+    .map-header span { font-size: 11px; color: #7f8f7c; display: block; margin-top: 3px; }
+    .map-footer {
+      position: absolute; left: 20px; bottom: 16px;
+      display: flex; gap: 16px; font-size: 11px; font-weight: 600; color: #62735c;
+      background: #f6f7ecdd; padding: 9px 14px; border: 1px solid #e0e7d4; border-radius: 10px;
+    }
+    .legend { display: flex; align-items: center; gap: 6px; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; background: #b7c5a8; display: inline-block; }
+    .legend-dot.ready { background: var(--orange); }
+    .legend-dot.done { background: #437457; }
+
+    .sidebar { display: flex; flex-direction: column; gap: 14px; }
+    .mission-card {
+      position: relative; background: #254d3e; color: #fffdf4;
+      border-radius: 21px; padding: 22px; overflow: hidden;
+      flex: 1; display: flex; flex-direction: column;
+      box-shadow: 0 5px 14px #28493212;
+    }
+    .mission-top { display: flex; justify-content: space-between; align-items: center; }
+    .level-pill { border: 1px solid #ffffff28; border-radius: 6px; padding: 4px 8px; color: #e9dba8; font-size: 11px; font-weight: 700; }
+    .mission-emblem {
+      width: 60px; height: 60px; display: grid; place-items: center;
+      border: 1px solid #e3ce9530; border-radius: 18px;
+      background: #ffffff10; margin: 16px 0 12px; color: #eacd86;
+    }
+    .mission-emblem .icon { width: 32px; height: 32px; }
+    .mission-card h2 { font-size: 25px; line-height: 1.15; margin: 0 0 8px; font-weight: 800; }
+    .mission-card p { font-size: 13px; line-height: 1.6; margin: 0 0 14px; color: #c2cebe; }
+    .skill-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+    .skill-tag { font-size: 10px; font-weight: 700; color: #d5deca; border: 1px solid #a1b89e44; border-radius: 6px; padding: 4px 8px; }
+    .primary-button {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 13px 16px; border-radius: 12px; border: 0;
+      background: #f4c875; color: #2e4432; font-size: 13px; font-weight: 800;
+      box-shadow: 0 3px 0 #c99e54; transition: transform .15s, background .15s; margin-top: auto;
+    }
+    .primary-button:hover { background: #ffda90; transform: translateY(-2px); }
+    .journey-card { border: 1px solid var(--line); background: #fcfbf6; border-radius: 18px; padding: 18px; }
+    .progress-track { height: 8px; background: #e9eddf; border-radius: 5px; margin-top: 10px; overflow: hidden; }
+    .progress-fill { height: 100%; background: #416d50; width: 0; border-radius: 5px; transition: width .6s ease; }
+    .journey-stats { display: grid; grid-template-columns: 1fr 1fr; margin-top: 14px; border-top: 1px solid #e6e8dd; padding-top: 12px; }
+    .stat + .stat { padding-left: 18px; border-left: 1px solid #e6e8dd; }
+    .stat-value { display: flex; align-items: center; gap: 6px; font-size: 20px; font-weight: 800; }
+
+    /* MAP CHECKPOINTS */
+    .checkpoint { cursor: pointer; outline: none; }
+    .checkpoint .node-shadow { fill: #6a7e5655; }
+    .checkpoint .node-base { fill: #dae1c8; stroke: #f9faed; stroke-width: 3; transition: fill .2s; }
+    .checkpoint .node-number { fill: #6b7e59; font-weight: 800; font-size: 18px; pointer-events: none; }
+    .checkpoint .label-bg { fill: #f9faefed; stroke: #e3e8d6; stroke-width: 1.2; transition: fill .2s; }
+    .checkpoint .label-title { fill: #354c30; font-size: 13px; font-weight: 800; pointer-events: none; }
+    .checkpoint .label-meta { fill: #7c8d6d; font-size: 8.5px; letter-spacing: 1px; font-weight: 800; pointer-events: none; }
+    .checkpoint .selection-ring { fill: none; stroke: #edb265; stroke-width: 2.5; opacity: 0; }
+    .checkpoint .ready-halo { fill: #ffc86a; opacity: 0; }
+    .checkpoint.ready .ready-halo { opacity: .22; animation: breathe 3s ease-in-out infinite; }
+    .checkpoint.ready .node-base { fill: #f2bd69; stroke: #ffebbf; }
+    .checkpoint.ready .node-number { fill: #56492e; }
+    .checkpoint.ready .label-bg { fill: #fff8e9; stroke: #edc78d; }
+    .checkpoint.complete .node-base { fill: #416d50; stroke: #d9e6c8; }
+    .checkpoint.complete .node-number { fill: #fcf5d4; }
+    .checkpoint.selected .selection-ring { opacity: 1; }
+    .route-segment { transition: stroke .7s; stroke: #f8f3df; }
+    .route-segment.cleared { stroke: #f3cc7b; }
+    .route-dash { stroke: #a9b295; stroke-dasharray: 2 9; stroke-width: 2; stroke-linecap: round; fill: none; opacity: .8; }
+
+    /* ACTIVITY CARDS & CONTAINERS */
+    .bento-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      border: 2px solid #E2E8F0;
+      box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.05);
+    }
+    .sign-metal {
+      background: linear-gradient(145deg, #ffffff, #f8fafc);
+      box-shadow: inset 0 0 0 4px #1e293b, 0 10px 20px rgba(0,0,0,0.08);
+    }
+    .btn-bounce:active { transform: scale(0.97); }
+    @keyframes breathe { 50% { opacity: .45; } }
+    @keyframes pulse-border {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      50% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    }
+    .pulse-attention { animation: pulse-border 2s infinite; }
+
+    @media (max-width: 980px) {
+      .game-layout { grid-template-columns: 1fr; }
+      .map-panel { height: auto; aspect-ratio: 1.3; min-height: 380px; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- SVG SPRITES FROM SUMMIT QUEST -->
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute">
+    <defs>
+      <symbol id="i-mountain" viewBox="0 0 24 24"><path d="m2 20 8-15 5 8 3-5 5 12H2Z"/><path d="m7.1 10.5 3 2.5 2.5-3.7M15 13l2.6 3 2.6-2.7"/></symbol>
+      <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m16 8-2.5 5.5L8 16l2.5-5.5L16 8Z"/></symbol>
+      <symbol id="i-badge" viewBox="0 0 24 24"><path d="m8 14-2 8 6-3 6 3-2-8"/><circle cx="12" cy="8" r="6"/><path d="m12 5 .8 1.7 1.9.3-1.4 1.4.3 1.9-1.6-.9-1.6.9.3-1.9L9.3 7l1.9-.3L12 5Z"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+      <symbol id="i-sound" viewBox="0 0 24 24"><path d="M11 4 5 9H2v6h3l6 5V4ZM15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></symbol>
+      <symbol id="i-muted" viewBox="0 0 24 24"><path d="M11 4 5 9H2v6h3l6 5V4Zm5 5 6 6m0-6-6 6"/></symbol>
+      <symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/></symbol>
+      <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 22V3m0 0c5-4 9 4 15 0v11c-6 4-10-4-15 0"/></symbol>
+      <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5C8 2 4 3 2 4v15c4-2 7-1 10 1 3-2 6-3 10-1V4c-2-1-6-2-10 1v15M6 8h3m6 0h3M6 12h3m6 0h3"/></symbol>
+      <symbol id="i-notice" viewBox="0 0 24 24"><path d="M13 21H4V3h13v7M7 7h7M7 11h3m-3 4h2"/><circle cx="16" cy="16" r="4"/><path d="m19 19 3 3"/></symbol>
+      <symbol id="i-traffic" viewBox="0 0 24 24"><rect x="7" y="1" width="10" height="19" rx="3"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="10" r="1"/><circle cx="12" cy="15" r="1"/><path d="M12 20v3M4 4l3 2m10 0 3-2M4 10l3 2m10 0 3-2"/></symbol>
+      <symbol id="i-blocks" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="8" rx="1"/><rect x="2" y="13" width="8" height="8" rx="1"/><rect x="14" y="13" width="8" height="8" rx="1"/><path d="M11 6h2m-8 11h2m10 0h2"/></symbol>
+      <symbol id="i-match" viewBox="0 0 24 24"><rect x="2" y="3" width="7" height="6" rx="2"/><rect x="15" y="15" width="7" height="6" rx="2"/><path d="M9 6h7a3 3 0 0 1 0 6H8a3 3 0 0 0 0 6h7m-3-3 3 3-3 3"/></symbol>
+      <symbol id="i-checklist" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="19" rx="2"/><path d="M9 3V1h6v2M7 9l1 1 2-3m3 2h4M7 15l1 1 2-3m3 2h4"/></symbol>
+      <symbol id="i-cards" viewBox="0 0 24 24"><rect x="9" y="4" width="12" height="17" rx="2"/><path d="M6 19 2 6a2 2 0 0 1 1-2l8-3 1 3m3 5-3 4 3 4 3-4-3-4Z"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10" cy="10" r="7"/><path d="m15 15 7 7M7 10l2 2 4-4"/></symbol>
+      <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 3h12v7a6 6 0 0 1-12 0V3Zm0 2H2v4a4 4 0 0 0 5 4m11-8h4v4a4 4 0 0 1-5 4m-5 3v5m-5 0h10"/></symbol>
+    </defs>
+  </svg>
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="topbar">
+    <div class="brand" onclick="showMapHome()" title="Return to Mountain Map">
+      <span class="brand-mark"><svg class="icon"><use href="#i-mountain"/></svg></span>
+      <div>
+        <div class="brand-name">summit quest<span style="color:#c09555">.</span></div>
+        <span class="brand-caption">A2 KET GRAMMAR ADVENTURE</span>
+      </div>
+    </div>
+
+    <!-- Quick Navigation Buttons -->
+    <div class="flex items-center gap-2 flex-wrap">
+      <button onclick="showMapHome()" id="btn-back-map" class="px-3.5 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-amber-200 font-extrabold text-xs md:text-sm flex items-center gap-2 shadow-sm btn-bounce">
+        <svg class="icon" style="width:17px;height:17px"><use href="#i-compass"/></svg>
+        <span>Mountain Map (Home)</span>
+      </button>
+      <button onclick="openBadgesModal()" class="px-3.5 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-extrabold text-xs md:text-sm flex items-center gap-1.5 border border-amber-300 btn-bounce">
+        <svg class="icon" style="width:17px;height:17px"><use href="#i-badge"/></svg>
+        <span>Badges (<span id="top-badge-count">0</span>/8)</span>
+      </button>
+    </div>
+
+    <!-- Classroom Timer & Sound Controls (No Team Scoreboard) -->
+    <div class="flex items-center gap-2 flex-wrap">
+      <div class="flex items-center gap-1.5 bg-white border border-slate-300 px-3 py-1.5 rounded-2xl shadow-sm">
+        <span class="text-base">⏱️</span>
+        <span id="timer-display" class="font-extrabold text-lg md:text-xl tabular-nums text-slate-800 w-14 text-center">03:00</span>
+        <div class="flex items-center gap-1 border-l border-slate-200 pl-2">
+          <button onclick="setTimerPreset(120)" class="px-2 py-0.5 text-xs font-bold rounded bg-slate-100 hover:bg-emerald-100 text-slate-700">2m</button>
+          <button onclick="setTimerPreset(180)" class="px-2 py-0.5 text-xs font-bold rounded bg-slate-100 hover:bg-emerald-100 text-slate-700">3m</button>
+          <button onclick="setTimerPreset(300)" class="px-2 py-0.5 text-xs font-bold rounded bg-slate-100 hover:bg-emerald-100 text-slate-700">5m</button>
+          <button onclick="setTimerPreset(480)" class="px-2 py-0.5 text-xs font-bold rounded bg-slate-100 hover:bg-emerald-100 text-slate-700">8m</button>
+        </div>
+        <button id="timer-play-btn" onclick="toggleTimer()" class="px-2.5 py-1 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs">Start</button>
+        <button onclick="resetTimer()" class="px-2 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs">Reset</button>
+      </div>
+
+      <button id="sound-toggle-btn" onclick="toggleSound()" class="w-10 h-10 rounded-full border border-slate-300 bg-white hover:bg-slate-100 grid place-items-center text-slate-700" title="Toggle Sound">
+        🔊
+      </button>
+      <button onclick="toggleFullScreen()" class="w-10 h-10 rounded-full border border-slate-300 bg-white hover:bg-slate-100 grid place-items-center text-slate-700" title="Full Screen">
+        <svg class="icon"><use href="#i-expand"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- =========================================================
+       VIEW A: SUMMIT QUEST MOUNTAIN MAP HOME VIEW
+       ========================================================= -->
+  <div id="home-map-view" class="shell flex-1">
+    <section class="page-heading">
+      <div>
+        <div class="eyebrow">A2 KEY (KET) • MUST, MUSTN'T, HAVE TO & DON'T HAVE TO</div>
+        <h1>One mountain. Eight challenges.</h1>
+        <p>Click any checkpoint on the mountain trail to launch the interactive classroom activity!</p>
+      </div>
+      <div class="heading-tag">
+        <svg class="icon"><use href="#i-flag"/></svg>
+        <strong>The Summit Expedition</strong>
+        <span class="text-slate-500 ml-1">• Click any level 1–8 to play</span>
+      </div>
+    </section>
+
+    <div class="game-layout">
+      <!-- Interactive SVG Mountain Map -->
+      <section class="map-panel" aria-label="Mountain adventure map with eight levels">
+        <div class="map-header">
+          <strong>Summit Ridge</strong>
+          <span>Click a checkpoint number (1–8) to open activity</span>
+        </div>
+
+        <svg class="map-art" id="mountain-map" viewBox="0 0 1000 710" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#edf2e4"/><stop offset="1" stop-color="#e5edd7"/></linearGradient>
+            <linearGradient id="mountain" x1="0" y1="0" x2=".2" y2="1"><stop offset="0" stop-color="#cbd7ba"/><stop offset=".45" stop-color="#a9bf93"/><stop offset="1" stop-color="#789c70"/></linearGradient>
+            <linearGradient id="face" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#93af86"/><stop offset="1" stop-color="#658b64"/></linearGradient>
+            <linearGradient id="lake" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#accdc1"/><stop offset="1" stop-color="#8db7aa"/></linearGradient>
+            <filter id="soft-shadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#435a36" flood-opacity=".12"/></filter>
+            <symbol id="pine" viewBox="0 0 38 65"><path d="M17 44h5v20h-5Z" fill="#6a7050"/><path d="m19 0 13 24h-6l11 21H1l11-21H6Z" fill="#658966"/><path d="M19 0v45H1l11-21H6Z" fill="#48765a"/></symbol>
+            <symbol id="pine-light" viewBox="0 0 38 65"><path d="M17 44h5v20h-5Z" fill="#81845c"/><path d="m19 0 13 24h-6l11 21H1l11-21H6Z" fill="#9eb486"/><path d="M19 0v45H1l11-21H6Z" fill="#85a274"/></symbol>
+            <symbol id="rock" viewBox="0 0 40 24"><path d="m0 20 8-14L26 0l14 20-21 4Z" fill="#8e9e78"/><path d="m26 0-7 24 21-4Z" fill="#7b8e6b"/><path d="m8 6 18-6-14 12Z" fill="#a3b18d"/></symbol>
+          </defs>
+          <path fill="url(#sky)" d="M0 0h1000v710H0Z"/>
+          <circle cx="788" cy="136" r="50" fill="#e5e9ce"/><circle cx="788" cy="136" r="34" fill="#e2e5c4"/>
+          <path d="M0 475 61 416l35 25 90-132 52 49 82-99 66 87 55-32 100 149 76-27 68 79 76-82 60 18 72-92 109 118v225H0Z" fill="#d5dfc6"/>
+          <path d="m-15 585 113-148 39 23 67-109 85 124 73-62 88 153 96-99 74 56 99-121 77 101 55-37 158 153v111H-15Z" fill="#bacfae"/>
+          <path d="M83 635 173 538l47-102 62-54 58-92 57-39 65-99 58-47 45-49 38 44 43 74 55 43 38 86 43 41 22 83 61 60 50 107 51 58-185 38-328 7Z" fill="url(#mountain)"/>
+          <path d="m565 56 38 44 43 74 55 43 38 86 43 41 22 83 61 60 50 107 51 58-225 25-75-89 33-72-62-84 14-77-58-76 10-60-51-60Z" fill="url(#face)" opacity=".72"/>
+          <path d="m520 105 45-49 38 44 43 74 27 22-31 2-26-23-18 19-39-30-27 15-25-17-45 17 22-35Z" fill="#f5f6e9"/>
+          <path d="m565 56 38 44 43 74 27 22-31 2-26-23-18 19-39-30 18-12-22-24 16-26Z" fill="#dce8d8"/>
+          <path d="m520 105-6 31-29 24 23-8 24 14 28-17 18 18-11-29-24-9 8-21Z" fill="#fffdf2"/>
+          <path d="M0 642c76-37 109-22 160-5s113 33 181 16 123-14 177 16c55-3 96-35 154-31s75 29 133 22 132-56 195-24v74H0Z" fill="#adc399"/>
+          <path d="M0 691c88-55 117-40 193-25 76 16 114 12 177 8s127 43 213 18 132-7 177-3 156-39 240-20v41H0Z" fill="#91b184"/>
+          <path d="M746 576c24-8 25 2 43 0s31 2 43 14 39 14 60 26 22 25 1 35-46 12-71 5-48-17-53-30-39-41-23-50Z" fill="url(#lake)"/>
+          <g opacity=".75"><use href="#pine-light" x="65" y="375" width="35" height="60"/><use href="#pine-light" x="153" y="307" width="29" height="53"/><use href="#pine-light" x="793" y="361" width="33" height="62"/><use href="#pine-light" x="904" y="423" width="31" height="58"/></g>
+          <g><use href="#pine" x="132" y="469" width="37" height="70"/><use href="#pine" x="104" y="500" width="30" height="56"/><use href="#pine" x="244" y="349" width="29" height="55"/><use href="#pine" x="706" y="428" width="37" height="70"/><use href="#pine" x="62" y="578" width="42" height="79"/><use href="#pine" x="892" y="538" width="37" height="70"/></g>
+          <g id="trails" fill="none" stroke-linecap="round" stroke-linejoin="round"></g>
+          <!-- Base camp tent -->
+          <g transform="translate(139 572)"><ellipse cx="17" cy="49" rx="53" ry="12" fill="#526f4d" opacity=".16"/><path d="M-23 44 11-8l44 52Z" fill="#e6b374"/><path d="M11-8 36-5l35 49H55Z" fill="#cf965e"/><path d="m-9 44 20-35 24 35Z" fill="#52634a"/></g>
+          <!-- Summit Flag -->
+          <g transform="translate(566 33)"><path d="M0 37V-8" stroke="#697555" stroke-width="3" stroke-linecap="round"/><path d="M1-8C13-14 23 2 39-4v23C23 24 14 8 1 14Z" fill="#e8a15c"/></g>
+          <text x="124" y="656" fill="#5c7753" font-size="9" font-weight="800" letter-spacing="1.8" transform="rotate(-5 124 656)">BASE CAMP</text>
+          <g id="checkpoints"></g>
+        </svg>
+
+        <div class="map-footer">
+          <span class="legend"><i class="legend-dot ready"></i>Ready to explore</span>
+          <span class="legend"><i class="legend-dot done"></i>Completed</span>
+          <span class="text-xs text-emerald-800 font-bold">💡 Tip: Double-click any checkpoint to open immediately!</span>
+        </div>
+      </section>
+
+      <!-- Right Sidebar: Selected Checkpoint Details -->
+      <aside class="sidebar">
+        <section class="mission-card">
+          <div class="mission-top">
+            <span class="eyebrow" id="mission-state" style="color:#b2c2ad">SELECTED CHECKPOINT</span>
+            <span class="level-pill" id="level-pill">01 / 08</span>
+          </div>
+          <div class="mission-emblem">
+            <svg class="icon" id="mission-icon"><use href="#i-notice"/></svg>
+          </div>
+          <h2 id="mission-title">Notice Detective</h2>
+          <p id="mission-description">Read the real-world notice, answer the detective question, and guess the Mystery Word!</p>
+          <div class="skill-tags" id="skill-tags"></div>
+
+          <button class="primary-button" onclick="launchSelectedLevel()">
+            <span>Launch Activity Now</span>
+            <svg class="icon"><use href="#i-arrow"/></svg>
+          </button>
+        </section>
+
+        <section class="journey-card">
+          <div class="flex justify-between items-center text-sm font-extrabold">
+            <strong>Class Climb Progress</strong>
+            <span id="progress-count" class="text-xs text-slate-500">0 of 8 levels</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <div class="journey-stats">
+            <div class="stat">
+              <div class="stat-value">
+                <svg class="icon" style="color:#c09555"><use href="#i-badge"/></svg>
+                <span id="badge-count">0</span><span class="text-xs text-slate-400 font-normal">/ 8</span>
+              </div>
+              <div class="text-xs text-slate-500 mt-1">Badges earned</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">
+                <svg class="icon" style="color:#2f6650"><use href="#i-mountain"/></svg>
+                <span id="progress-percent">0%</span>
+              </div>
+              <div class="text-xs text-slate-500 mt-1">To the summit</div>
+            </div>
+          </div>
+          <button onclick="resetAllProgress()" class="mt-3 w-full py-1.5 rounded-lg border border-slate-200 hover:bg-slate-100 text-xs font-bold text-slate-500">
+            Reset Expedition Progress
+          </button>
+        </section>
+      </aside>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       VIEW B: ACTIVE CLASSROOM ACTIVITY VIEWPORT (LEVELS 1–8)
+       ========================================================= -->
+  <div id="activity-viewport" class="hidden flex-1 max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
+
+    <!-- Activity Top Sub-Header -->
+    <div class="bento-card p-4 bg-white flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <span id="act-badge-num" class="px-3 py-1.5 rounded-xl bg-emerald-800 text-amber-200 font-black text-sm">LEVEL 01</span>
+        <div>
+          <h2 id="act-header-title" class="text-xl md:text-2xl font-extrabold text-slate-900">Notice Detective: Find the Mystery Word</h2>
+          <p id="act-header-sub" class="text-xs md:text-sm font-semibold text-slate-500">Step 1: Read the notice • Step 2: Answer question • Step 3: Guess the Mystery Word!</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="prevActivityLevel()" id="btn-prev-act" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs md:text-sm btn-bounce">← Prev</button>
+        <button onclick="completeCurrentCheckpoint()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-xs md:text-sm shadow-sm flex items-center gap-1.5 btn-bounce">
+          <span>🏅 Complete & Back to Map</span>
+        </button>
+        <button onclick="nextActivityLevel()" id="btn-next-act" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs md:text-sm btn-bounce">Next →</button>
+      </div>
+    </div>
+
+    <!-- =======================================================
+         LEVEL 1: NOTICE DETECTIVE (MYSTERY WORD REVEAL FLOW)
+         ======================================================= -->
+    <section id="stage-0" class="stage-panel space-y-6">
+      <!-- Sub-navigation for 4 Real-World Notices -->
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2 flex-wrap" id="mystery-tabs">
+          <!-- Populated by JS -->
+        </div>
+        <button onclick="resetMysteryNotice()" class="px-3 py-1.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs">🔄 Reset Current Notice</button>
+      </div>
+
+      <!-- Main Mystery Word Interactive Stage -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch" id="mystery-stage-container">
+        <!-- Populated dynamically by JS -->
+      </div>
+    </section>
+
+    <!-- =======================================================
+         LEVEL 2: TRAFFIC LIGHT RULES (INDUCTIVE QUESTION FIRST + GIANT NOTICE)
+         ======================================================= -->
+    <section id="stage-1" class="stage-panel hidden space-y-6">
+      <!-- Giant Notice Trigger Banner -->
+      <div class="bento-card p-5 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 text-white border-none flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-black/25 text-xs font-extrabold uppercase tracking-wider">Step 1: Inductive Discovery • Step 2: Big Notice</span>
+          <h3 class="text-xl md:text-2xl font-black mt-1">Guess How Each Rule Works First — Then Open the Giant Notice!</h3>
+        </div>
+        <button onclick="openGiantNoticeModal()" class="pulse-attention px-6 py-4 rounded-2xl bg-white text-rose-700 hover:bg-amber-50 font-black text-base md:text-lg shadow-xl flex items-center gap-2 shrink-0 btn-bounce">
+          <span>🚨 CLICK TO OPEN BIG NOTICE BOARD</span>
+        </button>
+      </div>
+
+      <!-- 3 Traffic Light Inductive Cards -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" id="inductive-cards-grid">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- =======================================================
+         LEVEL 3: GRAMMAR BUILDER (INTERACTIVE TABLE)
+         ======================================================= -->
+    <section id="stage-2" class="stage-panel hidden space-y-6">
+      <div class="bento-card p-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-200">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700">Unit 19 Grammar Structure</span>
+            <h3 class="text-2xl font-extrabold text-slate-900">Click each box to reveal the correct form of HAVE TO & MUSTN'T</h3>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="revealAllGrammarSlots(true)" class="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-xs md:text-sm btn-bounce">👀 Reveal All</button>
+            <button onclick="revealAllGrammarSlots(false)" class="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold text-xs md:text-sm btn-bounce">🔄 Hide All</button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto mt-5">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-900 text-white text-sm uppercase tracking-wider">
+                <th class="p-4 rounded-tl-xl w-1/4">Meaning</th>
+                <th class="p-4 w-1/4">Subject</th>
+                <th class="p-4 w-1/4">Target Form (Click Box)</th>
+                <th class="p-4 rounded-tr-xl">Base Verb + Example</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 text-base font-semibold">
+              <tr class="bg-amber-50/50">
+                <td rowspan="2" class="p-4 font-extrabold text-amber-800 border-r border-slate-200">🟡 OBLIGATION (+)<br><span class="text-xs font-normal text-slate-600">No choice! It's a rule.</span></td>
+                <td class="p-4">I / You / We / They</td>
+                <td class="p-4"><button onclick="toggleGrammarSlot(this, 'have to')" class="grammar-slot px-4 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 border-2 border-dashed border-amber-400 font-extrabold w-48 text-center">❓ Click to reveal</button></td>
+                <td class="p-4"><strong>go</strong> / wear smart clothes.</td>
+              </tr>
+              <tr class="bg-amber-50/50">
+                <td class="p-4">He / She / It / Everyone</td>
+                <td class="p-4"><button onclick="toggleGrammarSlot(this, 'has to')" class="grammar-slot px-4 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 border-2 border-dashed border-amber-400 font-extrabold w-48 text-center">❓ Click to reveal</button></td>
+                <td class="p-4"><strong>go</strong> / be at school at 8:00.</td>
+              </tr>
+              <tr class="bg-emerald-50/50">
+                <td rowspan="2" class="p-4 font-extrabold text-emerald-800 border-r border-slate-200">🟢 NO OBLIGATION (-)<br><span class="text-xs font-normal text-slate-600">Not necessary / You choose!</span></td>
+                <td class="p-4">I / You / We / They</td>
+                <td class="p-4"><button onclick="toggleGrammarSlot(this, 'don\'t have to')" class="grammar-slot px-4 py-2 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border-2 border-dashed border-emerald-400 font-extrabold w-48 text-center">❓ Click to reveal</button></td>
+                <td class="p-4"><strong>go</strong> / bring anything to eat.</td>
+              </tr>
+              <tr class="bg-emerald-50/50">
+                <td class="p-4">He / She / It</td>
+                <td class="p-4"><button onclick="toggleGrammarSlot(this, 'doesn\'t have to')" class="grammar-slot px-4 py-2 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border-2 border-dashed border-emerald-400 font-extrabold w-48 text-center">❓ Click to reveal</button></td>
+                <td class="p-4"><strong>go</strong> / clean his room every day.</td>
+              </tr>
+              <tr class="bg-red-50/50">
+                <td class="p-4 font-extrabold text-red-800 border-r border-slate-200">🔴 PROHIBITION (×)<br><span class="text-xs font-normal text-slate-600">100% Forbidden!</span></td>
+                <td class="p-4">I / You / He / She / We / They</td>
+                <td class="p-4"><button onclick="toggleGrammarSlot(this, 'mustn\'t')" class="grammar-slot px-4 py-2 rounded-xl bg-red-100 hover:bg-red-200 text-red-900 border-2 border-dashed border-red-400 font-extrabold w-48 text-center">❓ Click to reveal</button></td>
+                <td class="p-4"><strong>go</strong> / use phones in exams.</td>
+              </tr>
+              <tr class="bg-indigo-50/50">
+                <td rowspan="2" class="p-4 font-extrabold text-indigo-800 border-r border-slate-200">🔵 QUESTIONS (?)<br><span class="text-xs font-normal text-slate-600">Asking about rules</span></td>
+                <td class="p-4">I / you / we / they</td>
+                <td class="p-4"><button onclick="toggleGrammarSlot(this, 'Do ... have to')" class="grammar-slot px-4 py-2 rounded-xl bg-indigo-100 hover:bg-indigo-200 text-indigo-900 border-2 border-dashed border-indigo-400 font-extrabold w-48 text-center">❓ Click to reveal</button></td>
+                <td class="p-4"><strong>go</strong> / wear our uniform?</td>
+              </tr>
+              <tr class="bg-indigo-50/50">
+                <td class="p-4">he / she / it</td>
+                <td class="p-4"><button onclick="toggleGrammarSlot(this, 'Does ... have to')" class="grammar-slot px-4 py-2 rounded-xl bg-indigo-100 hover:bg-indigo-200 text-indigo-900 border-2 border-dashed border-indigo-400 font-extrabold w-48 text-center">❓ Click to reveal</button></td>
+                <td class="p-4"><strong>go</strong> / wake up early?</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================
+         LEVEL 4: SENTENCE MATCHER (8 SENTENCES)
+         ======================================================= -->
+    <section id="stage-3" class="stage-panel hidden space-y-6">
+      <div class="bento-card p-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-200">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700">Controlled Practice</span>
+            <h3 class="text-2xl font-extrabold text-slate-900">Match the Two Halves of the Sentences (1–8 with a–h)</h3>
+            <p class="text-sm text-slate-600">Click a sentence beginning on the left, then click its matching ending on the right.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="match-progress-badge" class="px-3 py-1.5 rounded-xl bg-emerald-100 text-emerald-800 font-extrabold text-sm">0 / 8 Matched</span>
+            <button onclick="autoSolveMatching()" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs md:text-sm btn-bounce">⚡ Show All Answers</button>
+            <button onclick="initMatchingGame()" class="px-3.5 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold text-xs md:text-sm btn-bounce">🔄 Reset</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-5">
+          <div class="space-y-2.5" id="match-left-col"></div>
+          <div class="space-y-2.5" id="match-right-col"></div>
+        </div>
+
+        <div id="matched-results-box" class="mt-6 pt-5 border-t border-slate-200 hidden">
+          <h4 class="text-sm font-extrabold uppercase tracking-wider text-slate-500 mb-3">✅ Completed Sentences:</h4>
+          <div id="matched-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================
+         LEVEL 5: LEO'S TRIP CHECKLIST (BUILT-IN AUDIO PLAYER + MP3 UPLOAD)
+         ======================================================= -->
+    <section id="stage-4" class="stage-panel hidden space-y-6">
+      <!-- Built-in AI Dialogue Audio Player Card -->
+      <div class="bento-card p-6 bg-slate-900 text-white border-none">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-700">
+          <div>
+            <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold text-xs uppercase">🎧 Built-in Classroom Audio Generator</span>
+            <h3 class="text-xl md:text-2xl font-extrabold mt-1">Listen to Leo Asking Mr. Peters About the School Trip</h3>
+            <p class="text-slate-300 text-sm">No external MP3 needed! Click <strong>"Play Built-in Dialogue Audio"</strong> to let the browser speak with 2 voices, or upload your own MP3 file.</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="btn-tts-play" onclick="playLeoDialogueAudio()" class="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-sm flex items-center gap-2 shadow-lg btn-bounce">
+              <span>▶️ Play Built-in Dialogue Audio</span>
+            </button>
+            <button onclick="stopLeoDialogueAudio()" class="px-3.5 py-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm btn-bounce">
+              ⏹️ Stop
+            </button>
+            <select id="tts-speed-select" class="px-3 py-3 rounded-xl bg-slate-800 border border-slate-600 text-white font-bold text-xs">
+              <option value="0.85">Speed: 0.85x (Clear A2)</option>
+              <option value="1" selected>Speed: 1.0x (Normal)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Live Speaking Line Display + Optional Custom MP3 Upload -->
+        <div class="mt-4 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div id="tts-live-caption" class="flex-1 w-full p-3.5 rounded-xl bg-slate-800 border border-slate-700 text-amber-300 font-bold text-sm md:text-base min-h-[3.2rem] flex items-center">
+            🎙️ Ready to play: Click "Play Built-in Dialogue Audio" above to start the listening task!
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0">
+            <label class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-bold cursor-pointer">
+              📂 Or Upload Custom MP3
+              <input type="file" accept="audio/*" class="hidden" onchange="loadCustomAudioFile(event)" />
+            </label>
+            <button onclick="toggleElement('leo-transcript-box')" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-bold">
+              📜 Show/Hide Script
+            </button>
+          </div>
+        </div>
+
+        <audio id="custom-audio-player" controls class="w-full mt-3 hidden"></audio>
+
+        <!-- Toggleable Full Transcript -->
+        <div id="leo-transcript-box" class="hidden mt-4 p-4 rounded-xl bg-slate-800/90 border border-slate-700 text-xs md:text-sm space-y-1.5 text-slate-200">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Checklist Items Grid -->
+      <div class="bento-card p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <h4 class="text-lg font-extrabold text-slate-900">Tick (✅ Has to) or Cross (❌ Doesn't have to) for Leo's Trip:</h4>
+          <div class="flex gap-2">
+            <button onclick="revealAllLeoChecklist(true)" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs btn-bounce">✅ Check All Answers</button>
+            <button onclick="revealAllLeoChecklist(false)" class="px-3.5 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold text-xs btn-bounce">🔄 Reset</button>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="leo-checklist-grid"></div>
+      </div>
+    </section>
+
+    <!-- =======================================================
+         LEVEL 6: KET CARD SHOWDOWN (EXPANDED TO 10 QUESTIONS)
+         ======================================================= -->
+    <section id="stage-5" class="stage-panel hidden space-y-6">
+      <div class="bento-card p-5 bg-slate-900 text-white border-none flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-amber-500 text-slate-950 font-extrabold text-xs uppercase">10 Real-World KET Notices</span>
+          <h3 class="text-xl md:text-2xl font-extrabold mt-1">Hold Up Your Card (RED / YELLOW / GREEN) & Choose A, B, or C!</h3>
+        </div>
+        <div class="flex items-center gap-1.5 flex-wrap" id="ket-question-pills">
+          <!-- Question 1..10 pills -->
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <!-- Sign Visual (5 cols) -->
+        <div class="lg:col-span-5 bento-card p-6 flex flex-col justify-between bg-slate-50">
+          <div>
+            <div class="flex items-center justify-between">
+              <span id="ket-q-location" class="text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-100 text-emerald-800">Notice #1</span>
+              <span id="ket-quiz-counter" class="text-xs font-extrabold text-slate-500">1 / 10</span>
+            </div>
+            <div id="ket-q-sign" class="sign-metal rounded-2xl p-6 my-5 text-center border-4 border-slate-800 bg-white"></div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white border border-slate-200">
+            <p class="text-xs font-extrabold uppercase text-slate-500 mb-2 text-center">Step 1: Which Rule Color Matches This Notice?</p>
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="checkColorCard('MUSTN\'T')" class="py-2.5 rounded-lg bg-red-600 text-white font-extrabold text-xs btn-bounce">🔴 MUSTN'T</button>
+              <button onclick="checkColorCard('HAVE TO')" class="py-2.5 rounded-lg bg-amber-500 text-white font-extrabold text-xs btn-bounce">🟡 HAVE TO</button>
+              <button onclick="checkColorCard('DON\'T HAVE TO')" class="py-2.5 rounded-lg bg-emerald-600 text-white font-extrabold text-xs btn-bounce">🟢 DON'T HAVE TO</button>
+            </div>
+            <p id="ket-color-feedback" class="text-center text-xs font-extrabold mt-2 min-h-[1.25rem]"></p>
+          </div>
+        </div>
+
+        <!-- Multiple Choice Options (7 cols) -->
+        <div class="lg:col-span-7 bento-card p-6 flex flex-col justify-between">
+          <div>
+            <h4 class="text-lg font-extrabold text-slate-800 mb-4">Step 2: Choose the sentence (A, B, or C) with the SAME meaning:</h4>
+            <div id="ket-options-list" class="space-y-3"></div>
+            <div id="ket-answer-explanation" class="hidden mt-4 p-4 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-900 text-sm font-bold"></div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-200 flex items-center justify-between">
+            <button onclick="prevKetQuestion()" class="px-4 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold text-sm btn-bounce">← Previous Notice</button>
+            <button onclick="nextKetQuestion()" class="px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-sm btn-bounce">Next Notice →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================
+         LEVEL 7: SURVIVAL GUIDE MISSION (CLEAN TASK + GUIDING + BIG TIMER)
+         ======================================================= -->
+    <section id="stage-6" class="stage-panel hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <!-- Left 7 Cols: Clear Mission Task & Guiding Prompts -->
+        <div class="lg:col-span-7 bento-card p-6 space-y-5">
+          <div class="border-b border-slate-200 pb-4">
+            <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs uppercase">Group Writing & Speaking Mission</span>
+            <h3 class="text-2xl md:text-3xl font-black text-slate-900 mt-2">🏕️ Mission: "The School Trip Survival Guide"</h3>
+            <p class="text-slate-600 text-base mt-1">Work in your group of 4 on paper/mini-board. Imagine our class is going on a <strong>2-Day Forest & Beach Camping Trip</strong>. Write <strong>6 Survival Rules</strong> together!</p>
+          </div>
+
+          <!-- 3 Required Rule Categories -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="p-4 rounded-2xl bg-amber-50 border-2 border-amber-300">
+              <span class="px-2.5 py-0.5 rounded-md bg-amber-500 text-white font-black text-xs">WRITE 2 SENTENCES</span>
+              <h4 class="text-lg font-black text-amber-900 mt-2">🟡 HAVE TO / MUST</h4>
+              <p class="text-xs font-bold text-amber-800 mt-1">Important camp duties:</p>
+              <p class="text-xs text-slate-600 mt-2 italic">"Everyone has to stay with the group."<br>"We have to wear hiking shoes."</p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-red-50 border-2 border-red-300">
+              <span class="px-2.5 py-0.5 rounded-md bg-red-600 text-white font-black text-xs">WRITE 2 SENTENCES</span>
+              <h4 class="text-lg font-black text-red-900 mt-2">🔴 MUSTN'T</h4>
+              <p class="text-xs font-bold text-red-800 mt-1">Dangerous / Forbidden:</p>
+              <p class="text-xs text-slate-600 mt-2 italic">"You mustn't feed wild monkeys."<br>"You mustn't swim alone at night."</p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-300">
+              <span class="px-2.5 py-0.5 rounded-md bg-emerald-600 text-white font-black text-xs">WRITE 2 SENTENCES</span>
+              <h4 class="text-lg font-black text-emerald-900 mt-2">🟢 DON'T HAVE TO</h4>
+              <p class="text-xs font-bold text-emerald-800 mt-1">Free choice / Optional:</p>
+              <p class="text-xs text-slate-600 mt-2 italic">"You don't have to wear a uniform."<br>"We don't have to cook dinner."</p>
+            </div>
+          </div>
+
+          <!-- Useful Idea Bank & Group Roles -->
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">🧭 Guiding Vocabulary & Idea Prompts:</h4>
+            <div class="flex flex-wrap gap-2 text-xs font-bold text-slate-700">
+              <span class="px-3 py-1.5 rounded-lg bg-white border border-slate-200">🔦 bring a flashlight</span>
+              <span class="px-3 py-1.5 rounded-lg bg-white border border-slate-200">🔥 light a fire near tents</span>
+              <span class="px-3 py-1.5 rounded-lg bg-white border border-slate-200">🗑️ drop litter in the forest</span>
+              <span class="px-3 py-1.5 rounded-lg bg-white border border-slate-200">🍽️ wash your own plate</span>
+              <span class="px-3 py-1.5 rounded-lg bg-white border border-slate-200">⛺ share a tent</span>
+              <span class="px-3 py-1.5 rounded-lg bg-white border border-slate-200">⏰ wake up at 6:00 AM</span>
+              <span class="px-3 py-1.5 rounded-lg bg-white border border-slate-200">🐻 touch wild animals</span>
+            </div>
+            <div class="pt-2 border-t border-slate-200 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+              <div><strong>👑 Leader:</strong> Keeps group speaking English</div>
+              <div><strong>✍️ Writer:</strong> Writes the 6 rules clearly</div>
+              <div><strong>🕵️ Grammar Cop:</strong> Checks verb forms</div>
+              <div><strong>🎤 Speaker:</strong> Presents to the class</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right 5 Cols: Giant Dedicated Mission Countdown Timer -->
+        <div class="lg:col-span-5 bento-card p-6 bg-slate-900 text-white border-none flex flex-col justify-between text-center">
+          <div>
+            <span class="px-3 py-1 rounded-full bg-white/10 text-amber-300 font-extrabold text-xs uppercase tracking-wider">⏱️ Mission Countdown Clock</span>
+            <h4 class="text-lg font-bold text-slate-300 mt-2">Time Remaining for Group Work</h4>
+          </div>
+
+          <div class="my-6 py-8 rounded-3xl bg-slate-800 border-2 border-slate-700">
+            <div id="mission-big-timer" class="text-6xl md:text-7xl font-black tabular-nums tracking-tight text-amber-400">08:00</div>
+            <p id="mission-timer-status" class="text-xs font-bold uppercase tracking-widest text-slate-400 mt-3">Ready to start timer</p>
+          </div>
+
+          <div class="space-y-3">
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="setMissionTimer(300)" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 font-extrabold text-xs border border-slate-600">5 Mins</button>
+              <button onclick="setMissionTimer(480)" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 font-extrabold text-xs border border-slate-600">8 Mins</button>
+              <button onclick="setMissionTimer(600)" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 font-extrabold text-xs border border-slate-600">10 Mins</button>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <button id="mission-timer-btn" onclick="toggleMissionTimer()" class="py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-base shadow-lg btn-bounce">▶️ START TIMER</button>
+              <button onclick="resetMissionTimer()" class="py-4 rounded-2xl bg-slate-700 hover:bg-slate-600 text-white font-extrabold text-base btn-bounce">🔄 RESET</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================
+         LEVEL 8: ERROR SPOTTER & EXIT TICKET
+         ======================================================= -->
+    <section id="stage-7" class="stage-panel hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 bento-card p-6">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-rose-600">Grammar Doctor • Delayed Error Correction</span>
+          <h3 class="text-2xl font-extrabold text-slate-900 mt-1">Spot & Fix the 4 Common KET Mistakes! 🛠️</h3>
+          <p class="text-sm text-slate-600 mb-4">Ask students to find the mistake first, then click the card to reveal the correction.</p>
+          <div class="space-y-3" id="error-cards-container"></div>
+        </div>
+
+        <div class="lg:col-span-5 bento-card p-6 bg-slate-900 text-white border-none flex flex-col justify-between">
+          <div>
+            <span class="px-3 py-1 rounded-full bg-white/15 text-xs font-extrabold uppercase tracking-wider">Final Wrap-Up • Exit Ticket</span>
+            <h3 class="text-2xl font-extrabold mt-2">🚪 Spin the Exit Ticket!</h3>
+            <p class="text-slate-300 text-sm mt-1">Make 1 true sentence about your life using the place and rule below:</p>
+
+            <div class="my-6 p-6 rounded-2xl bg-white/10 border-2 border-white/20 text-center space-y-3">
+              <div id="exit-place-icon" class="text-5xl">🏠</div>
+              <h4 id="exit-place-text" class="text-2xl font-black text-white">AT HOME</h4>
+              <span id="exit-modal-badge" class="inline-block px-4 py-1.5 rounded-full bg-amber-400 text-slate-950 font-black text-sm uppercase">
+                Use: HAVE TO / DON'T HAVE TO / MUSTN'T
+              </span>
+            </div>
+
+            <button onclick="spinExitTicket()" class="w-full py-4 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-base shadow-lg btn-bounce">
+              🎰 SPIN NEW PLACE & RULE!
+            </button>
+          </div>
+
+          <div class="mt-6 p-4 rounded-xl bg-black/30 border border-white/10 text-xs">
+            <p class="font-extrabold text-amber-300 uppercase">📝 Homework (KET Writing - 35 Words):</p>
+            <p class="text-slate-200 mt-1">Write a short message to your friend Alex about your school or home rules using <strong>have to</strong>, <strong>mustn't</strong>, and <strong>don't have to</strong>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- =========================================================
+       MODAL 1: GIANT FULL-SCREEN NOTICE FOR LEVEL 2 (TRAFFIC LIGHTS)
+       ========================================================= -->
+  <div id="giant-notice-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-5xl w-full p-6 md:p-10 shadow-2xl border-4 border-amber-400 space-y-6">
+      <div class="flex items-center justify-between border-b-2 border-slate-200 pb-4">
+        <div class="flex items-center gap-3">
+          <span class="text-4xl">🚨</span>
+          <div>
+            <span class="text-xs font-black uppercase tracking-widest text-rose-600">BIG CLASSROOM NOTICE • CAMBRIDGE A2 KET</span>
+            <h2 class="text-2xl md:text-4xl font-black text-slate-900">REMEMBER THE #1 DIFFERENCE!</h2>
+          </div>
+        </div>
+        <button onclick="closeGiantNoticeModal()" class="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 font-black text-slate-800 text-base">✕ Close</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Giant Red Box -->
+        <div class="p-6 md:p-8 rounded-3xl bg-red-50 border-4 border-red-500 text-center space-y-3">
+          <div class="text-6xl">🔴🚫</div>
+          <h3 class="text-3xl md:text-5xl font-black text-red-700">MUSTN'T</h3>
+          <p class="text-xl md:text-2xl font-extrabold text-slate-900">= DO NOT DO IT! (FORBIDDEN)</p>
+          <p class="text-base md:text-lg font-bold text-red-800 bg-red-100 py-2 px-4 rounded-xl">You have 0% Choice. It is against the rule!</p>
+          <p class="text-lg font-extrabold text-slate-800 pt-2">"You <u class="text-red-600">mustn't</u> use your phone in the exam."</p>
+        </div>
+
+        <!-- Giant Green Box -->
+        <div class="p-6 md:p-8 rounded-3xl bg-emerald-50 border-4 border-emerald-500 text-center space-y-3">
+          <div class="text-6xl">🟢✨</div>
+          <h3 class="text-3xl md:text-5xl font-black text-emerald-700">DON'T HAVE TO</h3>
+          <p class="text-xl md:text-2xl font-extrabold text-slate-900">= NOT NECESSARY! (FREE CHOICE)</p>
+          <p class="text-base md:text-lg font-bold text-emerald-800 bg-emerald-100 py-2 px-4 rounded-xl">You have 100% Choice. You can do it if you want!</p>
+          <p class="text-lg font-extrabold text-slate-800 pt-2">"You <u class="text-emerald-700">don't have to</u> bring food. Lunch is free!"</p>
+        </div>
+      </div>
+
+      <!-- Bottom Quick Summary Bar -->
+      <div class="p-4 rounded-2xl bg-amber-100 border-2 border-amber-400 text-center">
+        <p class="text-lg md:text-xl font-black text-amber-950">
+          🟡 And remember: <span class="underline">HAVE TO / HAS TO / MUST</span> = 100% Obligation (You have NO choice!)
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL 2: BADGES COLLECTION MODAL
+       ========================================================= -->
+  <div id="badges-modal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700">SUMMIT QUEST REWARDS</span>
+          <h3 class="text-2xl font-black text-slate-900">Your Trail Badges Collection</h3>
+        </div>
+        <button onclick="closeBadgesModal()" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 font-bold">✕</button>
+      </div>
+      <div id="badges-grid-container" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       JAVASCRIPT ENGINE
+       ========================================================= -->
+  <script>
+    /*************************************************************
+     * 1. SOUND EFFECTS ENGINE (WEB AUDIO SYNTHESIZER)
+     *************************************************************/
+    let soundEnabled = true;
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playSound(type) {
+      if (!soundEnabled) return;
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'correct') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.08);
+          osc.frequency.setValueAtTime(783.99, now + 0.16);
+          gain.gain.setValueAtTime(0.16, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.42);
+          osc.start(now);
+          osc.stop(now + 0.42);
+        } else if (type === 'wrong') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(210, now);
+          osc.frequency.linearRampToValueAtTime(140, now + 0.25);
+          gain.gain.setValueAtTime(0.14, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+          osc.start(now);
+          osc.stop(now + 0.28);
+        } else if (type === 'pop') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(480, now);
+          osc.frequency.exponentialRampToValueAtTime(700, now + 0.07);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        } else if (type === 'alarm') {
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(880, now);
+          osc.frequency.setValueAtTime(440, now + 0.15);
+          osc.frequency.setValueAtTime(880, now + 0.3);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
+          osc.start(now);
+          osc.stop(now + 0.65);
+        }
+      } catch (e) {}
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      document.getElementById('sound-toggle-btn').textContent = soundEnabled ? '🔊' : '🔇';
+      if (soundEnabled) playSound('pop');
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    function toggleElement(id) {
+      document.getElementById(id).classList.toggle('hidden');
+      playSound('pop');
+    }
+
+    /*************************************************************
+     * 2. SUMMIT QUEST 8-LEVEL MAP & NAVIGATION STATE
+     *************************************************************/
+    const LEVELS = [
+      { name: 'Notice Detective', icon: 'notice', sub: 'Read the notice, answer the question & guess the Mystery Word!', skills: ['Warm-up', 'Mystery Word'], badge: 'Eagle Eye', x: 247, y: 594, lx: 285, ly: 570, w: 170 },
+      { name: 'Traffic Light Rules', icon: 'traffic', sub: 'Guess how the grammar works first, then reveal the rule & Giant Notice!', skills: ['Inductive Discovery', 'Meaning'], badge: 'Trail Navigator', x: 485, y: 522, lx: 523, ly: 499, w: 180 },
+      { name: 'Grammar Builder', icon: 'blocks', sub: 'Complete the affirmative, negative, and question forms of Have to & Mustn\'t.', skills: ['Grammar Form', 'Accuracy'], badge: 'Skill Builder', x: 344, y: 443, lx: 125, ly: 420, w: 181 },
+      { name: 'Sentence Matcher', icon: 'match', sub: 'Match the 8 sentence beginnings with their endings.', skills: ['Matching', 'Syntax'], badge: 'Connection Maker', x: 570, y: 371, lx: 609, ly: 348, w: 184 },
+      { name: "Leo's Trip Checklist", icon: 'checklist', sub: 'Listen to the built-in dialogue audio and tick what Leo has to do!', skills: ['Listening', 'Speaking'], badge: 'Adventure Planner', x: 438, y: 302, lx: 214, ly: 279, w: 186 },
+      { name: 'KET Card Showdown', icon: 'cards', sub: '10 real-world KET Reading Part 1 signs! Hold up Red, Yellow, or Green!', skills: ['10 KET Signs', 'Exam Skills'], badge: 'Card Champion', x: 635, y: 242, lx: 674, ly: 219, w: 196 },
+      { name: 'Survival Guide Mission', icon: 'book', sub: 'Write 6 survival rules for your camping trip with the 8-minute timer.', skills: ['Group Writing', 'Production'], badge: 'Trail Survivor', x: 495, y: 172, lx: 228, ly: 149, w: 230 },
+      { name: 'Error Spotter & Exit', icon: 'search', sub: 'Spot the 4 grammar mistakes and spin the Exit Ticket wheel!', skills: ['Error Correction', 'Wrap-up'], badge: 'Summit Explorer', x: 566, y: 92, lx: 607, ly: 69, w: 197 }
+    ];
+
+    const ROUTES = [
+      'M247 594 C290 590 310 556 366 552 S453 562 485 522',
+      'M485 522 C491 490 414 498 383 485 S345 463 344 443',
+      'M344 443 C377 416 419 425 460 414 S531 400 570 371',
+      'M570 371 C566 345 510 355 480 338 S443 321 438 302',
+      'M438 302 C462 277 496 295 549 278 S619 263 635 242',
+      'M635 242 C633 218 575 221 544 208 S506 189 495 172',
+      'M495 172 C508 146 536 150 546 127 S559 108 566 92'
+    ];
+
+    let completedLevels = [];
+    let selectedLevel = 0;
+
+    function drawMountainMap() {
+      const trailsEl = document.getElementById('trails');
+      trailsEl.innerHTML = ROUTES.map((d, i) => `
+        <path d="${d}" stroke="#4c6c472b" stroke-width="25" transform="translate(0 4)"/>
+        <path d="${d}" class="route-segment ${completedLevels.includes(i) ? 'cleared' : ''}" stroke-width="21"/>
+        <path d="${d}" class="route-dash"/>
+      `).join('');
+
+      const cpEl = document.getElementById('checkpoints');
+      cpEl.innerHTML = LEVELS.map((l, i) => {
+        const isDone = completedLevels.includes(i);
+        const status = isDone ? 'complete' : 'ready';
+        return `
+          <g class="checkpoint ${status} ${i === selectedLevel ? 'selected' : ''}"
+             onclick="handleCheckpointClick(${i})"
+             ondblclick="openActivityStage(${i})"
+             role="button" tabindex="0">
+            <circle class="ready-halo" cx="${l.x}" cy="${l.y}" r="37"/>
+            <rect class="label-bg" x="${l.lx}" y="${l.ly}" width="${l.w}" height="47" rx="11" filter="url(#soft-shadow)"/>
+            <text class="label-meta" x="${l.lx + 13}" y="${l.ly + 15}">LEVEL 0${i + 1}${isDone ? ' · DONE ✓' : ' · CLICK TO OPEN'}</text>
+            <text class="label-title" x="${l.lx + 13}" y="${l.ly + 33}">${l.name.replaceAll('&', '&amp;')}</text>
+            <ellipse class="node-shadow" cx="${l.x}" cy="${l.y + 9}" rx="25" ry="22"/>
+            <circle class="selection-ring" cx="${l.x}" cy="${l.y}" r="31"/>
+            <circle class="node-base" cx="${l.x}" cy="${l.y}" r="24"/>
+            <text class="node-number" x="${l.x}" y="${l.y + 6}" text-anchor="middle">${i + 1}</text>
+          </g>
+        `;
+      }).join('');
+
+      // Update Sidebar
+      const lv = LEVELS[selectedLevel];
+      document.getElementById('mission-title').textContent = `${selectedLevel + 1}. ${lv.name}`;
+      document.getElementById('mission-description').textContent = lv.sub;
+      document.getElementById('mission-icon').innerHTML = `<use href="#i-${lv.icon}"/>`;
+      document.getElementById('level-pill').textContent = `0${selectedLevel + 1} / 08`;
+      document.getElementById('mission-state').textContent = completedLevels.includes(selectedLevel) ? 'COMPLETED ✓' : 'READY TO LAUNCH';
+      document.getElementById('skill-tags').innerHTML = lv.skills.map(s => `<span class="skill-tag">${s}</span>`).join('');
+
+      // Progress stats
+      const count = completedLevels.length;
+      document.getElementById('progress-count').textContent = `${count} of 8 levels`;
+      document.getElementById('progress-fill').style.width = `${(count / 8) * 100}%`;
+      document.getElementById('badge-count').textContent = count;
+      document.getElementById('top-badge-count').textContent = count;
+      document.getElementById('progress-percent').textContent = `${Math.round((count / 8) * 100)}%`;
+    }
+
+    function handleCheckpointClick(idx) {
+      if (selectedLevel === idx) {
+        // Second click opens immediately
+        openActivityStage(idx);
+      } else {
+        selectedLevel = idx;
+        playSound('pop');
+        drawMountainMap();
+      }
+    }
+
+    function launchSelectedLevel() {
+      openActivityStage(selectedLevel);
+    }
+
+    function showMapHome() {
+      stopLeoDialogueAudio();
+      document.getElementById('activity-viewport').classList.add('hidden');
+      document.getElementById('home-map-view').classList.remove('hidden');
+      playSound('pop');
+      drawMountainMap();
+    }
+
+    function openActivityStage(idx) {
+      stopLeoDialogueAudio();
+      selectedLevel = idx;
+      playSound('pop');
+
+      document.getElementById('home-map-view').classList.add('hidden');
+      document.getElementById('activity-viewport').classList.remove('hidden');
+
+      document.querySelectorAll('.stage-panel').forEach((panel, i) => {
+        panel.classList.toggle('hidden', i !== idx);
+      });
+
+      const lv = LEVELS[idx];
+      document.getElementById('act-badge-num').textContent = `LEVEL 0${idx + 1}`;
+      document.getElementById('act-header-title').textContent = `${idx + 1}. ${lv.name}`;
+      document.getElementById('act-header-sub').textContent = lv.sub;
+
+      document.getElementById('btn-prev-act').disabled = idx === 0;
+      document.getElementById('btn-next-act').disabled = idx === LEVELS.length - 1;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function prevActivityLevel() {
+      if (selectedLevel > 0) openActivityStage(selectedLevel - 1);
+    }
+
+    function nextActivityLevel() {
+      if (selectedLevel < LEVELS.length - 1) openActivityStage(selectedLevel + 1);
+    }
+
+    function completeCurrentCheckpoint() {
+      if (!completedLevels.includes(selectedLevel)) {
+        completedLevels.push(selectedLevel);
+      }
+      playSound('correct');
+      if (selectedLevel < 7) {
+        selectedLevel++;
+      }
+      showMapHome();
+    }
+
+    function resetAllProgress() {
+      completedLevels = [];
+      selectedLevel = 0;
+      playSound('pop');
+      drawMountainMap();
+    }
+
+    function openBadgesModal() {
+      const grid = document.getElementById('badges-grid-container');
+      grid.innerHTML = LEVELS.map((l, i) => {
+        const earned = completedLevels.includes(i);
+        return `
+          <div class="p-4 rounded-2xl border text-center ${earned ? 'bg-amber-50 border-amber-300' : 'bg-slate-50 border-slate-200 opacity-60'}">
+            <div class="text-3xl mb-1">${earned ? '🏅' : '🔒'}</div>
+            <p class="font-extrabold text-sm text-slate-900">${l.badge}</p>
+            <p class="text-xs text-slate-500 mt-0.5">Level ${i + 1}: ${l.name}</p>
+          </div>
+        `;
+      }).join('');
+      document.getElementById('badges-modal').classList.remove('hidden');
+      document.getElementById('badges-modal').classList.add('flex');
+      playSound('pop');
+    }
+
+    function closeBadgesModal() {
+      document.getElementById('badges-modal').classList.add('hidden');
+      document.getElementById('badges-modal').classList.remove('flex');
+    }
+
+    /*************************************************************
+     * 3. HEADER TIMER & LEVEL 7 MISSION TIMER
+     *************************************************************/
+    let timerSeconds = 180;
+    let timerDefault = 180;
+    let timerInterval = null;
+
+    function formatTime(sec) {
+      const m = String(Math.floor(sec / 60)).padStart(2, '0');
+      const s = String(sec % 60).padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function setTimerPreset(sec) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      timerDefault = sec;
+      timerSeconds = sec;
+      document.getElementById('timer-play-btn').textContent = 'Start';
+      document.getElementById('timer-display').textContent = formatTime(timerSeconds);
+      playSound('pop');
+    }
+
+    function toggleTimer() {
+      const btn = document.getElementById('timer-play-btn');
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        btn.textContent = 'Start';
+      } else {
+        btn.textContent = 'Pause';
+        timerInterval = setInterval(() => {
+          if (timerSeconds > 0) {
+            timerSeconds--;
+            document.getElementById('timer-display').textContent = formatTime(timerSeconds);
+          } else {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            btn.textContent = 'Start';
+            playSound('alarm');
+          }
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      setTimerPreset(timerDefault);
+    }
+
+    // Dedicated Big Timer for Level 7 Survival Guide Mission
+    let missionSec = 480;
+    let missionDef = 480;
+    let missionInt = null;
+
+    function setMissionTimer(sec) {
+      clearInterval(missionInt);
+      missionInt = null;
+      missionDef = sec;
+      missionSec = sec;
+      document.getElementById('mission-big-timer').textContent = formatTime(missionSec);
+      document.getElementById('mission-timer-btn').textContent = '▶️ START TIMER';
+      document.getElementById('mission-timer-status').textContent = 'Ready to start timer';
+      playSound('pop');
+    }
+
+    function toggleMissionTimer() {
+      const btn = document.getElementById('mission-timer-btn');
+      const status = document.getElementById('mission-timer-status');
+      if (missionInt) {
+        clearInterval(missionInt);
+        missionInt = null;
+        btn.textContent = '▶️ RESUME TIMER';
+        status.textContent = 'Timer Paused';
+      } else {
+        btn.textContent = '⏸️ PAUSE TIMER';
+        status.textContent = '🔥 Group Writing in Progress...';
+        missionInt = setInterval(() => {
+          if (missionSec > 0) {
+            missionSec--;
+            document.getElementById('mission-big-timer').textContent = formatTime(missionSec);
+          } else {
+            clearInterval(missionInt);
+            missionInt = null;
+            btn.textContent = '▶️ START TIMER';
+            status.textContent = '⏰ TIME IS UP! PENS DOWN!';
+            playSound('alarm');
+          }
+        }, 1000);
+      }
+    }
+
+    function resetMissionTimer() {
+      setMissionTimer(missionDef);
+    }
+
+    /*************************************************************
+     * 4. LEVEL 1: NOTICE DETECTIVE (MYSTERY WORD FLOW)
+     *    Flow: Notice -> Student Q -> Reveal Ans + Sentence w/ Mystery Slot -> Reveal Mystery Word
+     *************************************************************/
+    const mysteryNotices = [
+      {
+        title: "Notice #1 • Cinema Hall",
+        badge: "Red Sign",
+        icon: "🍔🚫📱",
+        signHeading: "NO OUTSIDE FOOD OR PHONE CALLS INSIDE",
+        signSub: "Cinema Staff will ask you to leave immediately.",
+        borderClass: "border-red-600 bg-red-50/40",
+        question: "Can you eat a burger or make a phone call inside this cinema?",
+        answerExplanation: "No! It is strictly forbidden (0% choice). You will get into trouble!",
+        sentenceBefore: "You",
+        mysteryWord: "MUSTN'T",
+        sentenceAfter: "bring outside food or make phone calls.",
+        wordHint: "Starts with M... (Means 100% Forbidden!)",
+        wordColor: "bg-red-600 text-white"
+      },
+      {
+        title: "Notice #2 • City Science Museum",
+        badge: "Green Sign",
+        icon: "🎟️✨🏛️",
+        signHeading: "FREE ENTRY FOR ALL STUDENTS ON MONDAYS",
+        signSub: "Optional audio guide: £3 (Only if you want one!)",
+        borderClass: "border-emerald-600 bg-emerald-50/40",
+        question: "Do students need to pay money to enter the museum on Monday?",
+        answerExplanation: "No, it is free! And the audio guide is optional—you have a choice!",
+        sentenceBefore: "Students",
+        mysteryWord: "DON'T HAVE TO",
+        sentenceAfter: "pay for a ticket on Mondays.",
+        wordHint: "3 words: D____ H____ T__ (Means Not Necessary!)",
+        wordColor: "bg-emerald-600 text-white"
+      },
+      {
+        title: "Notice #3 • School Noticeboard",
+        badge: "Amber Sign",
+        icon: "👔🏫🕗",
+        signHeading: "ALL STUDENTS: ARRIVE BY 8:00 AM IN SCHOOL UNIFORM",
+        signSub: "By order of the Headmaster, Mr. Peters",
+        borderClass: "border-amber-500 bg-amber-50/40",
+        question: "Is wearing a school uniform optional, or is it a strict school rule?",
+        answerExplanation: "It is a school rule for everyone! You have no choice.",
+        sentenceBefore: "Everyone",
+        mysteryWord: "HAS TO",
+        sentenceAfter: "be at school by 8:00 AM in uniform.",
+        wordHint: "2 words: H___ T__ (External rule for 'Everyone'!)",
+        wordColor: "bg-amber-500 text-slate-950"
+      },
+      {
+        title: "Notice #4 • Airport Security Gate",
+        badge: "Amber Sign",
+        icon: "🛂✈️🧳",
+        signHeading: "PASSENGERS: SHOW YOUR PASSPORT AND BOARDING PASS HERE",
+        signSub: "No entry to the departure gate without ID.",
+        borderClass: "border-indigo-600 bg-indigo-50/40",
+        question: "Can you get on the airplane without showing your passport?",
+        answerExplanation: "No! It is an official law/rule at the airport.",
+        sentenceBefore: "Passengers",
+        mysteryWord: "MUST / HAVE TO",
+        sentenceAfter: "show their passport at the gate.",
+        wordHint: "M____ or H____ T__ (100% Obligation!)",
+        wordColor: "bg-indigo-600 text-white"
+      }
+    ];
+
+    let currentMysteryIdx = 0;
+    // step 0: only notice & question shown
+    // step 1: oral answer + sentence with [ ? MYSTERY WORD ? ] shown
+    // step 2: mystery word revealed!
+    let mysteryStepState = [0, 0, 0, 0];
+
+    function renderMysteryStage() {
+      // Tabs
+      const tabsEl = document.getElementById('mystery-tabs');
+      tabsEl.innerHTML = mysteryNotices.map((n, idx) => `
+        <button onclick="selectMysteryNotice(${idx})"
+          class="px-4 py-2 rounded-xl font-extrabold text-xs md:text-sm transition-all btn-bounce
+          ${idx === currentMysteryIdx ? 'bg-emerald-800 text-amber-200 shadow-sm' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'}">
+          ${n.title}
+        </button>
+      `).join('');
+
+      const item = mysteryNotices[currentMysteryIdx];
+      const step = mysteryStepState[currentMysteryIdx];
+      const container = document.getElementById('mystery-stage-container');
+
+      container.innerHTML = `
+        <!-- Left 5 Cols: The Real-World Notice -->
+        <div class="lg:col-span-5 bento-card p-6 flex flex-col justify-between bg-slate-50">
+          <div>
+            <div class="flex items-center justify-between text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-3">
+              <span>${item.title}</span>
+              <span class="px-2.5 py-1 rounded-full bg-slate-200 text-slate-800">Step 1: Look at the Notice</span>
+            </div>
+            <div class="sign-metal rounded-2xl p-8 text-center my-3 border-4 ${item.borderClass}">
+              <div class="text-6xl mb-4">${item.icon}</div>
+              <p class="text-2xl md:text-3xl font-black tracking-tight text-slate-900 uppercase leading-tight">${item.signHeading}</p>
+              <p class="text-sm font-bold text-slate-600 mt-3">${item.signSub}</p>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-500 flex items-center justify-between">
+            <span>Notice ${currentMysteryIdx + 1} of ${mysteryNotices.length}</span>
+            <button onclick="nextMysteryNotice()" class="text-emerald-700 hover:underline font-extrabold">Next Notice →</button>
+          </div>
+        </div>
+
+        <!-- Right 7 Cols: Step-by-Step Question -> Answer -> Mystery Word -->
+        <div class="lg:col-span-7 bento-card p-6 flex flex-col justify-between space-y-5">
+          
+          <!-- STEP 1: QUESTION FOR STUDENTS -->
+          <div class="p-5 rounded-2xl bg-indigo-50 border-2 border-indigo-200">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">🗣️ Step 1: Class Question (Students Answer Aloud)</span>
+            <h3 class="text-xl md:text-2xl font-extrabold text-slate-900 mt-1">${item.question}</h3>
+            ${step === 0 ? `
+              <button onclick="advanceMysteryStep(1)" class="mt-4 px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm shadow-md btn-bounce">
+                👀 1. Reveal Answer & Show Mystery Sentence
+              </button>
+            ` : `
+              <div class="mt-3 p-3.5 rounded-xl bg-white border border-indigo-200 text-emerald-800 font-extrabold text-base">
+                ✅ Answer: ${item.answerExplanation}
+              </div>
+            `}
+          </div>
+
+          <!-- STEP 2 & 3: SENTENCE WITH MYSTERY WORD -->
+          <div class="p-6 rounded-2xl ${step >= 1 ? 'bg-amber-50/70 border-2 border-amber-300' : 'bg-slate-100 border-2 border-dashed border-slate-300 opacity-50'}">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-amber-800">🔐 Step 2: Guess the Mystery Word in the Sentence!</span>
+              ${step >= 1 ? `<span class="text-xs font-bold text-slate-500">Hint: ${item.wordHint}</span>` : ''}
+            </div>
+
+            ${step === 0 ? `
+              <p class="text-slate-400 font-bold text-base mt-3 italic">Reveal the answer above first to unlock the Mystery Sentence...</p>
+            ` : `
+              <div class="my-5 p-5 rounded-2xl bg-white border-2 border-slate-200 text-center">
+                <p class="text-xl md:text-3xl font-black text-slate-900 leading-relaxed">
+                  "${item.sentenceBefore}
+                  ${step === 1 ? `
+                    <button onclick="advanceMysteryStep(2)" class="mx-2 px-5 py-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-lg md:text-2xl border-2 border-dashed border-slate-900 shadow-md animate-pulse">
+                      ❓ MYSTERY WORD ❓
+                    </button>
+                  ` : `
+                    <span class="mx-2 px-5 py-1.5 rounded-xl ${item.wordColor} font-black text-xl md:text-3xl shadow-md inline-block">
+                      ${item.mysteryWord}
+                    </span>
+                  `}
+                  ${item.sentenceAfter}"
+                </p>
+              </div>
+
+              ${step === 1 ? `
+                <div class="flex items-center justify-between gap-3">
+                  <p class="text-xs font-bold text-slate-600">Ask students to shout out the missing modal verb, then click to reveal!</p>
+                  <button onclick="advanceMysteryStep(2)" class="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow-md shrink-0 btn-bounce">
+                    ✨ 2. Reveal Mystery Word!
+                  </button>
+                </div>
+              ` : `
+                <div class="flex items-center justify-between bg-emerald-100 border border-emerald-300 px-4 py-2.5 rounded-xl">
+                  <span class="text-sm font-extrabold text-emerald-900">🎉 Mystery Word Unlocked: <u>${item.mysteryWord}</u>!</span>
+                  <button onclick="nextMysteryNotice()" class="px-4 py-1.5 rounded-lg bg-emerald-800 text-white font-extrabold text-xs">Next Notice →</button>
+                </div>
+              `}
+            `}
+          </div>
+
+        </div>
+      `;
+    }
+
+    function selectMysteryNotice(idx) {
+      currentMysteryIdx = idx;
+      playSound('pop');
+      renderMysteryStage();
+    }
+
+    function advanceMysteryStep(nextStep) {
+      mysteryStepState[currentMysteryIdx] = nextStep;
+      playSound('correct');
+      renderMysteryStage();
+    }
+
+    function resetMysteryNotice() {
+      mysteryStepState[currentMysteryIdx] = 0;
+      playSound('pop');
+      renderMysteryStage();
+    }
+
+    function nextMysteryNotice() {
+      currentMysteryIdx = (currentMysteryIdx + 1) % mysteryNotices.length;
+      playSound('pop');
+      renderMysteryStage();
+    }
+
+    /*************************************************************
+     * 5. LEVEL 2: TRAFFIC LIGHT RULES (INDUCTIVE DISCOVERY FIRST + GIANT NOTICE)
+     *************************************************************/
+    const inductiveRules = [
+      {
+        id: 'amber',
+        badge: '🟡 AMBER LIGHT',
+        title: 'HAVE TO / MUST',
+        example: '"Everyone has to be at school at 8:00."',
+        question: 'Discovery Question: When we use HAVE TO or MUST, what does it mean?',
+        options: [
+          { letter: 'A', text: 'You have a choice. You can do it if you want.', correct: false },
+          { letter: 'B', text: 'You have NO choice. It is a rule or law (100% obligation)!', correct: true }
+        ],
+        ruleSummary: 'OBLIGATION (Bắt buộc): It is a rule. You have NO choice—you cannot say "no"!',
+        extraExamples: [
+          '• My mom has to wear her seatbelt in the car. (Law)',
+          '• I must study harder for the KET exam. (Personal feeling)'
+        ],
+        cardBg: 'bg-amber-50/70 border-amber-300',
+        btnColor: 'bg-amber-500 hover:bg-amber-600 text-slate-950'
+      },
+      {
+        id: 'red',
+        badge: '🔴 RED LIGHT',
+        title: "MUSTN'T",
+        example: '"You mustn\'t take photos inside the theater."',
+        question: 'Discovery Question: When we use MUSTN\'T, what does it mean?',
+        options: [
+          { letter: 'A', text: 'STOP! It is 100% forbidden. Do NOT do it!', correct: true },
+          { letter: 'B', text: 'It is optional. You can take photos if you want.', correct: false }
+        ],
+        ruleSummary: 'PROHIBITION (Cấm tuyệt đối): 0% permission! If you do it, you break the rule.',
+        extraExamples: [
+          '• Students mustn\'t run in the corridor.',
+          '• Pronunciation: Silent "t" -> /ˈmʌs.nt/'
+        ],
+        cardBg: 'bg-red-50/70 border-red-300',
+        btnColor: 'bg-red-600 hover:bg-red-700 text-white'
+      },
+      {
+        id: 'green',
+        badge: '🟢 GREEN LIGHT',
+        title: "DON'T / DOESN'T HAVE TO",
+        example: '"You don\'t have to bring anything to eat."',
+        question: 'Discovery Question: When we use DON\'T HAVE TO, what does it mean?',
+        options: [
+          { letter: 'A', text: 'You are forbidden to bring food.', correct: false },
+          { letter: 'B', text: 'No obligation! It is NOT necessary—you have a free choice!', correct: true }
+        ],
+        ruleSummary: 'NO OBLIGATION (Không bắt buộc): You have 100% choice. You can do it if you want, or not!',
+        extraExamples: [
+          '• Tomorrow is Sunday, so I don\'t have to get up early.',
+          '• He doesn\'t have to clean his room every day.'
+        ],
+        cardBg: 'bg-emerald-50/70 border-emerald-300',
+        btnColor: 'bg-emerald-600 hover:bg-emerald-700 text-white'
+      }
+    ];
+
+    let inductiveRevealed = { amber: false, red: false, green: false };
+    let inductiveSelectedOpt = { amber: null, red: null, green: null };
+
+    function renderInductiveCards() {
+      const grid = document.getElementById('inductive-cards-grid');
+      grid.innerHTML = inductiveRules.map(item => {
+        const isRev = inductiveRevealed[item.id];
+        const chosen = inductiveSelectedOpt[item.id];
+
+        return `
+          <div class="bento-card p-6 border-2 ${item.cardBg} flex flex-col justify-between space-y-4">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-white border border-slate-200 font-extrabold text-xs">${item.badge}</span>
+              <h4 class="text-2xl font-black text-slate-900 mt-3">${item.title}</h4>
+              <div class="mt-2 p-3 rounded-xl bg-white border border-slate-200 font-extrabold text-slate-800 text-sm">
+                📖 Example: <em>${item.example}</em>
+              </div>
+
+              <!-- Step 1: Inductive Discovery Question -->
+              <div class="mt-4 space-y-2">
+                <p class="text-xs font-extrabold uppercase tracking-wider text-slate-600">🤔 Step 1: Students Guess the Meaning</p>
+                <p class="text-sm font-bold text-slate-900">${item.question}</p>
+                <div class="space-y-2 pt-1">
+                  ${item.options.map((opt, oIdx) => {
+                    const isPicked = chosen === oIdx;
+                    let optStyle = "bg-white hover:bg-slate-100 border-slate-300 text-slate-800";
+                    if (isPicked) {
+                      optStyle = opt.correct
+                        ? "bg-emerald-600 border-emerald-700 text-white"
+                        : "bg-rose-600 border-rose-700 text-white";
+                    }
+                    return `
+                      <button onclick="pickInductiveOption('${item.id}', ${oIdx}, ${opt.correct})"
+                        class="w-full text-left p-3 rounded-xl border-2 font-bold text-xs md:text-sm transition-all flex items-start gap-2 btn-bounce ${optStyle}">
+                        <span class="font-black">${opt.letter}.</span>
+                        <span>${opt.text}</span>
+                      </button>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2: Reveal Usage Box -->
+            <div class="pt-3 border-t border-slate-200/80">
+              ${!isRev ? `
+                <button onclick="revealInductiveRule('${item.id}')" class="w-full py-3 rounded-xl ${item.btnColor} font-extrabold text-sm shadow-sm btn-bounce">
+                  🔓 Step 2: Reveal Grammar Rule
+                </button>
+              ` : `
+                <div class="p-4 rounded-xl bg-white border-2 border-slate-800 space-y-2">
+                  <p class="text-xs font-black uppercase text-emerald-700">✅ OFFICIAL GRAMMAR RULE:</p>
+                  <p class="text-sm font-extrabold text-slate-900">${item.ruleSummary}</p>
+                  <div class="text-xs text-slate-600 space-y-1 pt-1 border-t border-slate-100">
+                    ${item.extraExamples.map(ex => `<p>${ex}</p>`).join('')}
+                  </div>
+                </div>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function pickInductiveOption(id, optIdx, isCorrect) {
+      inductiveSelectedOpt[id] = optIdx;
+      if (isCorrect) {
+        inductiveRevealed[id] = true;
+        playSound('correct');
+      } else {
+        playSound('wrong');
+      }
+      renderInductiveCards();
+    }
+
+    function revealInductiveRule(id) {
+      inductiveRevealed[id] = true;
+      playSound('correct');
+      renderInductiveCards();
+    }
+
+    function openGiantNoticeModal() {
+      document.getElementById('giant-notice-modal').classList.remove('hidden');
+      document.getElementById('giant-notice-modal').classList.add('flex');
+      playSound('correct');
+    }
+
+    function closeGiantNoticeModal() {
+      document.getElementById('giant-notice-modal').classList.add('hidden');
+      document.getElementById('giant-notice-modal').classList.remove('flex');
+      playSound('pop');
+    }
+
+    /*************************************************************
+     * 6. LEVEL 3: GRAMMAR BUILDER TABLE
+     *************************************************************/
+    function toggleGrammarSlot(btn, answerText) {
+      if (btn.dataset.revealed === 'true') {
+        btn.dataset.revealed = 'false';
+        btn.innerHTML = '❓ Click to reveal';
+        btn.classList.add('border-dashed');
+        playSound('pop');
+      } else {
+        btn.dataset.revealed = 'true';
+        btn.innerHTML = `✅ ${answerText}`;
+        btn.classList.remove('border-dashed');
+        playSound('correct');
+      }
+    }
+
+    function revealAllGrammarSlots(show) {
+      const answers = ['have to', 'has to', "don't have to", "doesn't have to", "mustn't", 'Do ... have to', 'Does ... have to'];
+      document.querySelectorAll('.grammar-slot').forEach((btn, idx) => {
+        btn.dataset.revealed = show ? 'true' : 'false';
+        if (show) {
+          btn.innerHTML = `✅ ${answers[idx]}`;
+          btn.classList.remove('border-dashed');
+        } else {
+          btn.innerHTML = '❓ Click to reveal';
+          btn.classList.add('border-dashed');
+        }
+      });
+      playSound(show ? 'correct' : 'pop');
+    }
+
+    /*************************************************************
+     * 7. LEVEL 4: SENTENCE MATCHER (8 SENTENCES)
+     *************************************************************/
+    const unit19Matches = [
+      { id: 1, left: "1. Everyone has to be at school", rightKey: "b", rightText: "b. at eight o'clock.", note: "'Everyone' takes singular verb 'has to'." },
+      { id: 2, left: "2. Mr Peters has to check", rightKey: "f", rightText: "f. your names.", note: "'Mr Peters' (He) + has to + check." },
+      { id: 3, left: "3. You have to wear", rightKey: "g", rightText: "g. smart clothes to the disco.", note: "Obligation rule for the disco." },
+      { id: 4, left: "4. You don't have to bring anything", rightKey: "a", rightText: "a. to eat.", note: "No obligation: food is provided." },
+      { id: 5, left: "5. Do we have to wear", rightKey: "d", rightText: "d. our uniform on the journey?", note: "Question form: Do + we + have to + verb?" },
+      { id: 6, left: "6. My mom has to wear", rightKey: "c", rightText: "c. her seatbelt in the car.", note: "Traffic law / external obligation." },
+      { id: 7, left: "7. I don't have to", rightKey: "h", rightText: "h. cook my dinner tonight.", note: "I don't have to + base verb 'cook'." },
+      { id: 8, left: "8. He doesn't have to clean", rightKey: "e", rightText: "e. his room every day.", note: "He doesn't have to + clean." }
+    ];
+
+    const rightColumnOrder = ["a", "b", "c", "d", "e", "f", "g", "h"];
+    let selectedLeftId = null;
+    let solvedIds = [];
+
+    function initMatchingGame() {
+      selectedLeftId = null;
+      solvedIds = [];
+      document.getElementById('matched-results-box').classList.add('hidden');
+      document.getElementById('matched-list').innerHTML = '';
+      renderMatchingColumns();
+    }
+
+    function renderMatchingColumns() {
+      document.getElementById('match-progress-badge').textContent = `${solvedIds.length} / 8 Matched`;
+
+      document.getElementById('match-left-col').innerHTML = unit19Matches.map(item => {
+        const isSolved = solvedIds.includes(item.id);
+        const isSelected = selectedLeftId === item.id;
+        return `
+          <button onclick="selectLeftItem(${item.id})" ${isSolved ? 'disabled' : ''}
+            class="w-full text-left p-3.5 rounded-xl font-bold text-sm md:text-base transition-all border-2 flex items-center justify-between
+            ${isSolved ? 'bg-emerald-50 border-emerald-300 text-emerald-800 opacity-60' :
+              isSelected ? 'bg-emerald-800 border-emerald-800 text-white shadow-md' :
+              'bg-slate-50 hover:bg-emerald-50 border-slate-200 text-slate-800'}">
+            <span>${item.left}</span>
+            <span class="text-xs font-extrabold">${isSolved ? '✅ (' + item.rightKey + ')' : '→'}</span>
+          </button>
+        `;
+      }).join('');
+
+      document.getElementById('match-right-col').innerHTML = rightColumnOrder.map(key => {
+        const matchObj = unit19Matches.find(m => m.rightKey === key);
+        const isSolved = solvedIds.includes(matchObj.id);
+        return `
+          <button onclick="selectRightItem('${key}')" ${isSolved ? 'disabled' : ''}
+            class="w-full text-left p-3.5 rounded-xl font-bold text-sm md:text-base transition-all border-2 flex items-center justify-between
+            ${isSolved ? 'bg-emerald-50 border-emerald-300 text-emerald-800 opacity-60' :
+              'bg-white hover:bg-amber-50 border-slate-200 text-slate-800'}">
+            <span>${matchObj.rightText}</span>
+            ${isSolved ? `<span class="text-xs font-extrabold text-emerald-700">#${matchObj.id}</span>` : ''}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectLeftItem(id) {
+      if (solvedIds.includes(id)) return;
+      selectedLeftId = id;
+      playSound('pop');
+      renderMatchingColumns();
+    }
+
+    function selectRightItem(rightKey) {
+      if (!selectedLeftId) {
+        playSound('wrong');
+        return;
+      }
+      const target = unit19Matches.find(m => m.id === selectedLeftId);
+      if (target && target.rightKey === rightKey) {
+        solvedIds.push(target.id);
+        selectedLeftId = null;
+        playSound('correct');
+        addSolvedSentenceCard(target);
+        renderMatchingColumns();
+      } else {
+        playSound('wrong');
+      }
+    }
+
+    function addSolvedSentenceCard(item) {
+      const box = document.getElementById('matched-results-box');
+      const list = document.getElementById('matched-list');
+      box.classList.remove('hidden');
+      const card = document.createElement('div');
+      card.className = "p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs md:text-sm";
+      card.innerHTML = `
+        <p class="font-extrabold text-slate-900">${item.left} <span class="text-emerald-700 underline">${item.rightText.slice(3)}</span></p>
+        <p class="text-xs text-slate-600 mt-0.5">💡 ${item.note}</p>
+      `;
+      list.appendChild(card);
+    }
+
+    function autoSolveMatching() {
+      initMatchingGame();
+      unit19Matches.forEach(item => {
+        solvedIds.push(item.id);
+        addSolvedSentenceCard(item);
+      });
+      renderMatchingColumns();
+      playSound('correct');
+    }
+
+    /*************************************************************
+     * 8. LEVEL 5: LEO'S TRIP CHECKLIST + BUILT-IN DUAL-VOICE TTS AUDIO
+     *************************************************************/
+    const leoDialogueLines = [
+      { speaker: "Leo", pitch: 1.18, text: "Excuse me, Mr. Peters. Can I ask about the school trip next week? Do we have to get up early every day?" },
+      { speaker: "Mr. Peters", pitch: 0.85, text: "Yes, Leo. Everyone has to get up early at seven o'clock for breakfast." },
+      { speaker: "Leo", pitch: 1.18, text: "What about the water activities? Do I have to go sailing and swimming?" },
+      { speaker: "Mr. Peters", pitch: 0.85, text: "No, you don't have to go sailing, and you don't have to go swimming. You can choose! Also, on Friday night there is a disco, but you don't have to go to the disco if you are tired." },
+      { speaker: "Leo", pitch: 1.18, text: "Great! Can I bring my mobile phone?" },
+      { speaker: "Mr. Peters", pitch: 0.85, text: "No, I'm afraid every student has to leave their phone at home. Also, you have to share a bedroom with three other boys, and everyone has to help with the cleaning every morning." },
+      { speaker: "Leo", pitch: 1.18, text: "Do we have to do any school work on the trip?" },
+      { speaker: "Mr. Peters", pitch: 0.85, text: "No! It's a holiday adventure trip, so you don't have to do any school work!" }
+    ];
+
+    let ttsPlaying = false;
+    let currentLineIdx = 0;
+
+    function renderLeoTranscript() {
+      const box = document.getElementById('leo-transcript-box');
+      box.innerHTML = leoDialogueLines.map((line, idx) => `
+        <p id="script-line-${idx}" class="p-1.5 rounded transition-all">
+          <strong class="${line.speaker === 'Leo' ? 'text-amber-300' : 'text-emerald-300'}">${line.speaker}:</strong> ${line.text}
+        </p>
+      `).join('');
+    }
+
+    function playLeoDialogueAudio() {
+      if (!('speechSynthesis' in window)) {
+        document.getElementById('tts-live-caption').textContent = "⚠️ Your browser does not support Web Speech synthesis. Please open the script below or upload an MP3.";
+        return;
+      }
+      window.speechSynthesis.cancel();
+      ttsPlaying = true;
+      currentLineIdx = 0;
+      speakNextDialogueLine();
+    }
+
+    function speakNextDialogueLine() {
+      if (!ttsPlaying || currentLineIdx >= leoDialogueLines.length) {
+        ttsPlaying = false;
+        document.getElementById('tts-live-caption').textContent = "✅ Audio finished! Now check the 8 items on Leo's checklist below.";
+        return;
+      }
+
+      const line = leoDialogueLines[currentLineIdx];
+      const speed = parseFloat(document.getElementById('tts-speed-select').value || '1');
+      const utter = new SpeechSynthesisUtterance(line.text);
+      utter.lang = 'en-GB';
+      utter.rate = speed;
+      utter.pitch = line.pitch;
+
+      document.getElementById('tts-live-caption').innerHTML = `
+        <span>🗣️ <strong class="text-white">${line.speaker}:</strong> "${line.text}"</span>
+      `;
+
+      utter.onend = () => {
+        currentLineIdx++;
+        setTimeout(speakNextDialogueLine, 350);
+      };
+
+      window.speechSynthesis.speak(utter);
+    }
+
+    function stopLeoDialogueAudio() {
+      ttsPlaying = false;
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      const cap = document.getElementById('tts-live-caption');
+      if (cap) cap.textContent = "⏹️ Audio stopped. Click 'Play Built-in Dialogue Audio' to listen again.";
+    }
+
+    function loadCustomAudioFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      stopLeoDialogueAudio();
+      const player = document.getElementById('custom-audio-player');
+      player.src = URL.createObjectURL(file);
+      player.classList.remove('hidden');
+      player.play();
+    }
+
+    const leoTasks = [
+      { id: 1, task: "get up early every day", icon: "⏰", hasTo: true },
+      { id: 2, task: "go sailing", icon: "⛵", hasTo: false },
+      { id: 3, task: "go swimming", icon: "🏊", hasTo: false },
+      { id: 4, task: "go to the disco", icon: "🪩", hasTo: false },
+      { id: 5, task: "leave his phone at home", icon: "📵", hasTo: true },
+      { id: 6, task: "share a bedroom", icon: "🛏️", hasTo: true },
+      { id: 7, task: "help with the cleaning", icon: "🧹", hasTo: true },
+      { id: 8, task: "do any school work", icon: "📚", hasTo: false }
+    ];
+
+    let leoState = {};
+
+    function renderLeoChecklist() {
+      const grid = document.getElementById('leo-checklist-grid');
+      grid.innerHTML = leoTasks.map(item => {
+        const st = leoState[item.id] || null;
+        let sentenceHtml = `<span class="text-xs text-slate-400 italic">Click ✅ or ❌ after listening!</span>`;
+        if (st === 'tick') {
+          sentenceHtml = `<span class="text-sm font-extrabold text-amber-800">🗣️ "Leo <u>has to</u> ${item.task}."</span>`;
+        } else if (st === 'cross') {
+          sentenceHtml = `<span class="text-sm font-extrabold text-emerald-800">🗣️ "Leo <u>doesn't have to</u> ${item.task}."</span>`;
+        }
+
+        return `
+          <div class="p-4 rounded-2xl border-2 transition-all flex flex-col justify-between gap-3
+            ${st === 'tick' ? 'bg-amber-50/70 border-amber-300' :
+              st === 'cross' ? 'bg-emerald-50/70 border-emerald-300' :
+              'bg-slate-50 border-slate-200'}">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-3">
+                <span class="text-3xl">${item.icon}</span>
+                <div>
+                  <span class="text-xs font-bold text-slate-400 uppercase">Item #${item.id}</span>
+                  <h4 class="text-base md:text-lg font-extrabold text-slate-900">${item.task}</h4>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button onclick="setLeoItem(${item.id}, 'tick')" class="px-3 py-1.5 rounded-xl font-extrabold text-xs border transition-all btn-bounce
+                  ${st === 'tick' ? 'bg-amber-500 text-white border-amber-600' : 'bg-white text-slate-700 border-slate-300'}">
+                  ✅ Has to
+                </button>
+                <button onclick="setLeoItem(${item.id}, 'cross')" class="px-3 py-1.5 rounded-xl font-extrabold text-xs border transition-all btn-bounce
+                  ${st === 'cross' ? 'bg-emerald-600 text-white border-emerald-700' : 'bg-white text-slate-700 border-slate-300'}">
+                  ❌ Doesn't have to
+                </button>
+              </div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-white border border-slate-200/80">${sentenceHtml}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function setLeoItem(id, status) {
+      const target = leoTasks.find(t => t.id === id);
+      const isCorrect = (status === 'tick' && target.hasTo) || (status === 'cross' && !target.hasTo);
+      leoState[id] = status;
+      playSound(isCorrect ? 'correct' : 'pop');
+      renderLeoChecklist();
+    }
+
+    function revealAllLeoChecklist(reveal) {
+      if (!reveal) {
+        leoState = {};
+        playSound('pop');
+      } else {
+        leoTasks.forEach(t => { leoState[t.id] = t.hasTo ? 'tick' : 'cross'; });
+        playSound('correct');
+      }
+      renderLeoChecklist();
+    }
+
+    /*************************************************************
+     * 9. LEVEL 6: KET READING PART 1 SHOWDOWN (EXPANDED TO 10 QUESTIONS)
+     *************************************************************/
+    const ketQuestions = [
+      {
+        location: "Notice #1 • City Swimming Pool",
+        signTitle: "SWIMMING POOL RULES",
+        signBody: "Please take a shower before entering the water. Diving is strictly forbidden in the shallow end.",
+        icon: "🏊‍♂️🚿",
+        ruleColor: "MUSTN'T",
+        explanation: "'Diving is strictly forbidden' = You mustn't dive into the shallow part of the pool.",
+        options: [
+          { letter: "A", text: "You don't have to take a shower before swimming.", correct: false },
+          { letter: "B", text: "You mustn't dive into the shallow part of the pool.", correct: true },
+          { letter: "C", text: "You have to dive at the deep end of the pool.", correct: false }
+        ]
+      },
+      {
+        location: "Notice #2 • School Library",
+        signTitle: "LIBRARY NOTICE",
+        signBody: "Students can borrow up to 3 books for two weeks. Returning books early is fine, too!",
+        icon: "📚🤫",
+        ruleColor: "DON'T HAVE TO",
+        explanation: "'Returning books early is fine' = You don't have to keep a book for the full two weeks.",
+        options: [
+          { letter: "A", text: "You have to keep every library book for two weeks.", correct: false },
+          { letter: "B", text: "You mustn't borrow more than two books at a time.", correct: false },
+          { letter: "C", text: "You don't have to wait two weeks to give a book back.", correct: true }
+        ]
+      },
+      {
+        location: "Notice #3 • Science Lab Door",
+        signTitle: "DANGER: SCIENCE LAB",
+        signBody: "Safety glasses are compulsory for all experiments. Ask Dr. Smith if you need a pair.",
+        icon: "🥽🧪",
+        ruleColor: "HAVE TO",
+        explanation: "'Compulsory for all experiments' = Students have to wear safety glasses.",
+        options: [
+          { letter: "A", text: "Students have to wear safety glasses during experiments.", correct: true },
+          { letter: "B", text: "Students don't have to wear glasses if they are careful.", correct: false },
+          { letter: "C", text: "Students mustn't speak to Dr. Smith in the lab.", correct: false }
+        ]
+      },
+      {
+        location: "Notice #4 • Text Message from Mom",
+        signTitle: "MESSAGE FROM MOM",
+        signBody: "Hi Sam! Grandma is bringing pizza for everyone tonight, so don't worry about cooking dinner!",
+        icon: "🍕📱",
+        ruleColor: "DON'T HAVE TO",
+        explanation: "Grandma is bringing pizza, so Sam doesn't have to cook dinner tonight.",
+        options: [
+          { letter: "A", text: "Sam mustn't eat pizza with Grandma tonight.", correct: false },
+          { letter: "B", text: "Sam doesn't have to cook dinner tonight.", correct: true },
+          { letter: "C", text: "Sam has to make a pizza before Grandma arrives.", correct: false }
+        ]
+      },
+      {
+        location: "Notice #5 • Youth Football Club",
+        signTitle: "SATURDAY FOOTBALL MATCH",
+        signBody: "All players: Be on the team bus at 8:15 AM sharp! Bring your own water bottle.",
+        icon: "⚽🚌",
+        ruleColor: "HAVE TO",
+        explanation: "'All players: Be on the team bus at 8:15 AM' = Players have to arrive by 8:15 AM.",
+        options: [
+          { letter: "A", text: "Players have to arrive at the bus by 8:15 AM.", correct: true },
+          { letter: "B", text: "Players don't have to bring anything to drink.", correct: false },
+          { letter: "C", text: "Players mustn't travel on the team bus.", correct: false }
+        ]
+      },
+      {
+        location: "Notice #6 • Forest National Park",
+        signTitle: "WILDLIFE WARNING",
+        signBody: "Wild monkeys live in this forest. Do not give them any snacks—they can bite!",
+        icon: "🐒🌲",
+        ruleColor: "MUSTN'T",
+        explanation: "'Do not give them any snacks' = You mustn't feed the monkeys.",
+        options: [
+          { letter: "A", text: "You don't have to look at the monkeys in the forest.", correct: false },
+          { letter: "B", text: "You have to bring snacks for the forest monkeys.", correct: false },
+          { letter: "C", text: "You mustn't feed the monkeys in the park.", correct: true }
+        ]
+      },
+      {
+        location: "Notice #7 • School Art Club",
+        signTitle: "FRIDAY ART CLUB",
+        signBody: "Come and paint with us after school! We have lots of brushes and paint—just bring yourself!",
+        icon: "🎨🖌️",
+        ruleColor: "DON'T HAVE TO",
+        explanation: "'We have lots of brushes and paint' = You don't have to bring your own art supplies.",
+        options: [
+          { letter: "A", text: "Students mustn't use the club's paintbrushes.", correct: false },
+          { letter: "B", text: "Students don't have to bring their own paint.", correct: true },
+          { letter: "C", text: "Students have to buy new brushes before Friday.", correct: false }
+        ]
+      },
+      {
+        location: "Notice #8 • City Train Station",
+        signTitle: "TRAIN TICKET NOTICE",
+        signBody: "Buy your ticket at the machine BEFORE getting on the train. £50 fine for travelling without a ticket.",
+        icon: "🚆🎫",
+        ruleColor: "HAVE TO",
+        explanation: "You have to buy a ticket before you get on the train.",
+        options: [
+          { letter: "A", text: "You can buy your ticket on the train if you want.", correct: false },
+          { letter: "B", text: "You don't have to pay £50 if you lose your ticket.", correct: false },
+          { letter: "C", text: "You have to buy a ticket before boarding the train.", correct: true }
+        ]
+      },
+      {
+        location: "Notice #9 • School Exam Room",
+        signTitle: "EXAM IN PROGRESS",
+        signBody: "SILENCE PLEASE. Bags and smartwatches are not allowed inside the examination room.",
+        icon: "⌚🚫📝",
+        ruleColor: "MUSTN'T",
+        explanation: "'Not allowed inside' = You mustn't wear a smartwatch in the exam room.",
+        options: [
+          { letter: "A", text: "You mustn't wear a smartwatch in the exam room.", correct: true },
+          { letter: "B", text: "You don't have to be quiet outside the exam room.", correct: false },
+          { letter: "C", text: "You have to put your watch on the desk.", correct: false }
+        ]
+      },
+      {
+        location: "Notice #10 • School Concert",
+        signTitle: "SUMMER MUSIC CONCERT",
+        signBody: "Tickets are £4 for adults. Children under 12 enter for free! Doors open at 6:30 PM.",
+        icon: "🎸🎟️",
+        ruleColor: "DON'T HAVE TO",
+        explanation: "'Children under 12 enter for free' = Ten-year-old children don't have to pay.",
+        options: [
+          { letter: "A", text: "Children under 12 mustn't come to the concert.", correct: false },
+          { letter: "B", text: "A ten-year-old child doesn't have to pay for a ticket.", correct: true },
+          { letter: "C", text: "Everyone has to pay £4 at 6:30 PM.", correct: false }
+        ]
+      }
+    ];
+
+    let currentKetIdx = 0;
+
+    function renderKetQuestion() {
+      const q = ketQuestions[currentKetIdx];
+      document.getElementById('ket-quiz-counter').textContent = `Question ${currentKetIdx + 1} / ${ketQuestions.length}`;
+      document.getElementById('ket-q-location').textContent = q.location;
+      document.getElementById('ket-color-feedback').textContent = '';
+      document.getElementById('ket-answer-explanation').classList.add('hidden');
+
+      // Pills 1..10
+      document.getElementById('ket-question-pills').innerHTML = ketQuestions.map((_, i) => `
+        <button onclick="jumpKetQuestion(${i})"
+          class="w-8 h-8 rounded-lg font-extrabold text-xs transition-all
+          ${i === currentKetIdx ? 'bg-amber-400 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
+          ${i + 1}
+        </button>
+      `).join('');
+
+      document.getElementById('ket-q-sign').innerHTML = `
+        <div class="text-4xl mb-2">${q.icon}</div>
+        <h4 class="text-xl font-black text-slate-900 uppercase tracking-tight">${q.signTitle}</h4>
+        <p class="text-base font-bold text-slate-700 mt-2 leading-snug">"${q.signBody}"</p>
+      `;
+
+      document.getElementById('ket-options-list').innerHTML = q.options.map((opt, idx) => `
+        <button onclick="selectKetOption(${idx})" id="ket-opt-${idx}"
+          class="w-full text-left p-4 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 transition-all flex items-center gap-3 btn-bounce">
+          <span class="w-9 h-9 rounded-xl bg-slate-900 text-white font-black flex items-center justify-center shrink-0">${opt.letter}</span>
+          <span class="font-bold text-slate-800 text-base">${opt.text}</span>
+        </button>
+      `).join('');
+    }
+
+    function jumpKetQuestion(idx) {
+      currentKetIdx = idx;
+      playSound('pop');
+      renderKetQuestion();
+    }
+
+    function checkColorCard(chosenColor) {
+      const q = ketQuestions[currentKetIdx];
+      const fb = document.getElementById('ket-color-feedback');
+      if (chosenColor === q.ruleColor) {
+        playSound('correct');
+        fb.className = "text-center text-xs font-extrabold mt-2 text-emerald-600";
+        fb.textContent = `✅ Correct! Target rule: ${q.ruleColor}! Now choose A, B, or C.`;
+      } else {
+        playSound('wrong');
+        fb.className = "text-center text-xs font-extrabold mt-2 text-rose-600";
+        fb.textContent = `❌ Look closely at the notice and try another card!`;
+      }
+    }
+
+    function selectKetOption(optIdx) {
+      const q = ketQuestions[currentKetIdx];
+      const opt = q.options[optIdx];
+      const btn = document.getElementById(`ket-opt-${optIdx}`);
+      const exp = document.getElementById('ket-answer-explanation');
+
+      if (opt.correct) {
+        playSound('correct');
+        btn.className = "w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-100 transition-all flex items-center gap-3";
+        exp.classList.remove('hidden');
+        exp.textContent = `💡 Why? ${q.explanation}`;
+      } else {
+        playSound('wrong');
+        btn.className = "w-full text-left p-4 rounded-2xl border-2 border-rose-400 bg-rose-100 transition-all flex items-center gap-3 opacity-75";
+      }
+    }
+
+    function prevKetQuestion() {
+      currentKetIdx = (currentKetIdx - 1 + ketQuestions.length) % ketQuestions.length;
+      playSound('pop');
+      renderKetQuestion();
+    }
+
+    function nextKetQuestion() {
+      currentKetIdx = (currentKetIdx + 1) % ketQuestions.length;
+      playSound('pop');
+      renderKetQuestion();
+    }
+
+    /*************************************************************
+     * 10. LEVEL 8: ERROR SPOTTER & EXIT TICKET
+     *************************************************************/
+    const commonErrors = [
+      {
+        wrong: "1. ❌ You mustn't to feed the wild animals in the forest.",
+        right: "1. ✅ You mustn't feed the wild animals in the forest.",
+        rule: "Never use 'to' after must / mustn't! Use the base verb (feed)."
+      },
+      {
+        wrong: "2. ❌ My brother doesn't has to clean his bedroom today.",
+        right: "2. ✅ My brother doesn't have to clean his bedroom today.",
+        rule: "After 'doesn't', always use the base form 'have to' (NOT has to)."
+      },
+      {
+        wrong: "3. ❌ Do she have to wear a school uniform on Fridays?",
+        right: "3. ✅ Does she have to wear a school uniform on Fridays?",
+        rule: "Use 'Does' for He / She / It in questions."
+      },
+      {
+        wrong: "4. ❌ Tomorrow is Sunday, so I mustn't wake up early!",
+        right: "4. ✅ Tomorrow is Sunday, so I don't have to wake up early!",
+        rule: "Waking up early on Sunday isn't forbidden—it's just not necessary (don't have to)!"
+      }
+    ];
+
+    function renderErrorCards() {
+      const container = document.getElementById('error-cards-container');
+      container.innerHTML = commonErrors.map((err, idx) => `
+        <div onclick="flipErrorCard(${idx})" class="p-4 rounded-2xl border-2 border-rose-200 bg-rose-50/60 hover:bg-rose-50 cursor-pointer transition-all" id="err-card-${idx}">
+          <div class="flex items-center justify-between">
+            <p class="font-extrabold text-rose-900 text-base">${err.wrong}</p>
+            <span class="text-xs font-extrabold px-2.5 py-1 rounded-lg bg-white text-rose-700 border border-rose-200">Click to Fix 🔧</span>
+          </div>
+          <div id="err-fix-${idx}" class="hidden mt-3 pt-3 border-t border-emerald-200">
+            <p class="font-extrabold text-emerald-800 text-base">${err.right}</p>
+            <p class="text-xs font-semibold text-slate-600 mt-1">💡 <strong>Why?</strong> ${err.rule}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function flipErrorCard(idx) {
+      const fix = document.getElementById(`err-fix-${idx}`);
+      const card = document.getElementById(`err-card-${idx}`);
+      const isHidden = fix.classList.contains('hidden');
+      fix.classList.toggle('hidden');
+      if (isHidden) {
+        card.className = "p-4 rounded-2xl border-2 border-emerald-400 bg-emerald-50/70 cursor-pointer transition-all";
+        playSound('correct');
+      } else {
+        card.className = "p-4 rounded-2xl border-2 border-rose-200 bg-rose-50/60 cursor-pointer transition-all";
+        playSound('pop');
+      }
+    }
+
+    const exitPlaces = [
+      { icon: "🏠", place: "AT HOME", prompt: "Use: HAVE TO or DON'T HAVE TO" },
+      { icon: "🏫", place: "AT SCHOOL", prompt: "Use: MUSTN'T or HAVE TO" },
+      { icon: "✈️", place: "ON AN AIRPLANE", prompt: "Use: MUST or MUSTN'T" },
+      { icon: "🎬", place: "AT THE CINEMA", prompt: "Use: MUSTN'T or DON'T HAVE TO" },
+      { icon: "🇬🇧", place: "IN AN ENGLISH CLASS", prompt: "Use: HAVE TO or MUSTN'T" },
+      { icon: "🏡", place: "AT A FRIEND'S HOUSE", prompt: "Use: MUSTN'T or DON'T HAVE TO" }
+    ];
+
+    function spinExitTicket() {
+      playSound('correct');
+      const randomItem = exitPlaces[Math.floor(Math.random() * exitPlaces.length)];
+      document.getElementById('exit-place-icon').textContent = randomItem.icon;
+      document.getElementById('exit-place-text').textContent = randomItem.place;
+      document.getElementById('exit-modal-badge').textContent = randomItem.prompt;
+    }
+
+    /*************************************************************
+     * INITIALIZE ALL MODULES ON WINDOW LOAD
+     *************************************************************/
+    window.onload = function () {
+      drawMountainMap();
+      renderMysteryStage();
+      renderInductiveCards();
+      initMatchingGame();
+      renderLeoTranscript();
+      renderLeoChecklist();
+      renderKetQuestion();
+      renderErrorCards();
+    };
+  </script>
+</body>
+</html>
